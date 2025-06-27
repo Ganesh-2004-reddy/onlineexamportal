@@ -1,0 +1,2962 @@
+-------------pom.xml-------------
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.5.0</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.example</groupId>
+	<artifactId>Online_Exam_Portal-1</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Online_Exam_Portal-1</name>
+	<description>Demo project for Spring Boot</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>21</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web-services</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.11.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.11.5</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if you prefer -->
+    <version>0.11.5</version>
+    <scope>runtime</scope>
+</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+-------------------------------------------------
+
+-----------------application.properties-----------------
+spring.application.name=Online_Exam_Portal-1
+server.port=2101
+spring.datasource.url=jdbc:mysql://localhost:3306/oep
+spring.datasource.username=root
+spring.datasource.password=root
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+
+#Security
+spring.security.user.name=user
+spring.security.user.password=1234
+
+# JWT Configuration
+jwt.secret=hbrjkhrwvnfbvhjeqvlqnjkhgjbvvnlfnkjghfgyvhbvioewdfmfgtefrsexwtddhndkq
+ # 24 hours in milliseconds (24 * 60 * 60 * 1000)
+jwt.expiration=86400000
+
+------------------------------------------------
+---------onlineexamportalapplication.java---------------
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+
+@SpringBootApplication
+@EnableMethodSecurity
+public class OnlineExamPortal1Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(OnlineExamPortal1Application.class, args);
+	}
+
+}
+-------------------------------------------------------
+-------------------jwtauthfilter.java-----------------------
+package com.example.demo.Config;
+
+import com.example.demo.Service.CustomUserDetailsService;
+import com.example.demo.Config.JwtUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+@Component
+public class JwtAuthFilter extends OncePerRequestFilter {
+    private final JwtUtil jwtUtil;
+	
+    private final CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    public JwtAuthFilter(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService) {
+        this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
+    }
+  
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String authHeader = request.getHeader("Authorization");
+        String token = null;
+        String username = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+            username = jwtUtil.extractUsername(token);
+        }
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            if (jwtUtil.validateToken(token, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
+}
+-------------------------------------------------------
+---------------------jwtutil.java-------------------------------
+package com.example.demo.Config;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
+import java.security.Key;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+@Component
+public class JwtUtil {
+
+    // Secret key for signing JWTs. Store securely, ideally in environment variables.
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
+
+    // Token expiration time in milliseconds (e.g., 24 hours)
+    @Value("${jwt.expiration}")
+    private long EXPIRATION_TIME; // 24 hours in milliseconds
+
+    // Retrieve username from token
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    // Retrieve expiration date from token
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    // Generic method to extract a specific claim from the token
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    // Extract all claims from the token
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    // Check if the token is expired
+    private Boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    // Validate the token
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    // Generate token for a user
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        // Add roles to claims
+        claims.put("roles", userDetails.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .toList());
+        return createToken(claims, userDetails.getUsername());
+    }
+
+    // Create the JWT token
+    private String createToken(Map<String, Object> claims, String subject) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    // Get the signing key from the secret key
+    private Key getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+}
+---------------------------------------------------------
+---------------------------securityconfig.java-------------------
+package com.example.demo.Config;
+
+import com.example.demo.Service.CustomUserDetailsService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    private final JwtAuthFilter jwtAuthFilter;
+    private final CustomUserDetailsService userDetailsService;
+
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, CustomUserDetailsService userDetailsService) {
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.userDetailsService = userDetailsService;
+    }
+
+    // PasswordEncoder bean for hashing passwords
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    
+    // AuthenticationProvider to use CustomUserDetailsService and PasswordEncoder
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
+
+    // AuthenticationManager bean to handle authentication
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    // SecurityFilterChain to configure HTTP security
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless API
+            .authorizeHttpRequests(authorize -> authorize
+                // Allow unauthenticated access to registration and login
+                .requestMatchers("/examProtal/userModule/register", "/examProtal/userModule/login","/api/admin/exams/getAllExams","/api/admin/exams/getExam/{id}","/examProtal/userModule/getById/{id}","/analytics/reports/user/{userId}","/analytics/reports/user/{userId}/exam/{examId}").permitAll()
+                // ADMIN can access all users and update roles
+                .requestMatchers("/examProtal/userModule/users", "/examProtal/userModule/{id}/role","qb/addQuestion","qb/addMultipleQuestions","qb/uploadFile","qb/getquestion/{id}","qb/getAll","qb/updQuestion/{id}","qb/delQuestion/{id}","qb/getByCategory/{category}","qb/getByDifficulty/{difficulty}","/api/admin/exams/update/{id}","/api/admin/exams/delete/{id}","/api/admin/exams/role/{id}","/mapping/{examId}/{questionId}","/mapping/exam/{examId}","/mapping/allexams","mapping/exam/{examId}/adminQues","/api/exams/exam/{examId}","/api/exams/{examId}/responses/{userId}","/analytics/reports/","/analytics/reports","/analytics/reports/topper","/analytics/reports/all").hasRole("ADMIN")
+                // Other endpoints require authentication
+                .requestMatchers("qb/attemptQuestions","mapping/exam/{examId}/questions","/api/exams/{examId}/submit","/api/exams/responses/{userId}","/analytics/reports/exams/{examId}","/analytics/reports/rank").hasAnyRole("ADMIN","STUDENT")
+                .anyRequest().authenticated()
+            )
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Use stateless sessions for JWT
+            )
+            .authenticationProvider(authenticationProvider()) // Set custom authentication provider
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter before default authentication filter
+
+        return http.build();
+    }
+}
+---------------------------------------------------------
+----------------------------examcontroller.java------------------
+package com.example.demo.Controller;
+
+import com.example.demo.DTO.ExamDTO;
+import com.example.demo.DTO.ExamResponseDTO;
+import com.example.demo.DTO.IdResponseDTO;
+import com.example.demo.Entity.Role;
+import com.example.demo.Service.ExamService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/admin/exams")
+public class ExamController {
+    @Autowired
+    private ExamService examService;
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<IdResponseDTO> createExam(@Valid @RequestBody ExamDTO examDTO) {
+        ExamResponseDTO createdExam = examService.createExam(examDTO);
+        return new ResponseEntity<>(new IdResponseDTO(createdExam.getExamId(), "Exam created successfully"), HttpStatus.CREATED);
+    }
+    @GetMapping("/getAllExams")
+    public ResponseEntity<List<ExamResponseDTO>> getAllExams() {
+        List<ExamResponseDTO> exams = examService.getAllExams();
+        return new ResponseEntity<>(exams, HttpStatus.OK);
+    }
+
+    @GetMapping("/getExam/{id}")
+    public ResponseEntity<ExamResponseDTO> getExamById(@PathVariable Integer id) {
+        Optional<ExamResponseDTO> exam = examService.getExamById(id);
+        return exam.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ExamResponseDTO> updateExam(@PathVariable Integer id, @Valid @RequestBody ExamDTO examDetails) {
+        ExamResponseDTO updatedExam = examService.updateExam(id, examDetails);
+        if (updatedExam != null) {
+            return new ResponseEntity<>(updatedExam, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteExam(@PathVariable Integer id) {
+        if (examService.deleteExam(id)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @PutMapping("role/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> assignRoleToUser(@PathVariable Integer id, @RequestParam Role role) {
+        examService.assignRole(id, role);
+        return ResponseEntity.ok("Role Updated Successfully");
+    }
+}
+------------------------------------------------------------------
+--------------exammanagementcontroller.java-------------------------
+package com.example.demo.Controller;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.DTO.AnswerSubmissionDTO;
+//import com.example.demo.DTO.ExamResponseDTO;
+import com.example.demo.DTO.ExamSubmissionDTO;
+import com.example.demo.DTO.ResponseSummaryDTO;
+import com.example.demo.DTO.UserResponseDTO;
+import com.example.demo.Entity.Exam;
+import com.example.demo.Entity.QuestionBank;
+import com.example.demo.Entity.Response;
+import com.example.demo.Exception.ResourceNotFoundException;
+import com.example.demo.Repository.ExamRepository;
+import com.example.demo.Service.ExamService;
+import com.example.demo.Service.QuestionBankService;
+import com.example.demo.Service.ResponseService;
+
+@RestController
+@RequestMapping("/api/exams")
+public class ExamManagementController {
+
+    //@Autowired
+    //private ExamService examService;
+
+    @Autowired
+    private QuestionBankService questionService;
+
+    @Autowired
+    private ResponseService responseService;
+    
+    @Autowired
+    private ExamRepository examRepository;
+
+    @PostMapping("/{examId}/submit")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<List<ResponseSummaryDTO>> submitExam(@PathVariable Integer examId, @RequestBody ExamSubmissionDTO submissionDTO) {
+        /*List<ResponseSummaryDTO> responseSummaries = new ArrayList<>();
+        Optional<Exam> examOpt = examRepository.findById(examId);
+
+        if (!examOpt.isPresent()) {
+            throw new ResourceNotFoundException("Exam not found with ID: " + examId);
+        }
+
+        Exam exam = examOpt.get();
+
+        for (AnswerSubmissionDTO ans : submissionDTO.getAnswers()) {
+            Optional<QuestionBank> questionOpt = questionService.getById(ans.getQuestionId());
+
+            if (!questionOpt.isPresent()) {
+                throw new ResourceNotFoundException("Question not found with ID: " + ans.getQuestionId());
+            }
+
+            QuestionBank question = questionOpt.get();
+           
+            
+            Response response = new Response();
+            response.setUserId(submissionDTO.getUserId());
+            response.setExam(exam);
+            response.setQuestion(question);
+            response.setSubmittedAnswer(ans.getSubmittedAnswer());
+
+           /* int marks = question.getCorrectAnswer().equals(ans.getSubmittedAnswer()) ? question.getMaxMarks() : 0;
+            response.setMarksObtained(marks);
+			int marks=0;
+            Response savedResponse = responseService.submitResponse(response);
+
+            ResponseSummaryDTO summary = new ResponseSummaryDTO(
+                    savedResponse.getResponseId(),
+                    question.getQuestionId(),
+                    ans.getSubmittedAnswer(),
+                    marks
+            );
+            responseSummaries.add(summary);
+        }
+
+        return ResponseEntity.ok(responseSummaries);
+        */
+    	return responseService.submitExam(examId,submissionDTO);
+    }
+
+    @GetMapping("/responses/{userId}")
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
+    public ResponseEntity<Map<Integer, Map<Integer, List<UserResponseDTO>>>> getUserResponse(@PathVariable Integer userId) {
+        List<Response> responses = responseService.getResponsesByUser(userId);
+
+        List<UserResponseDTO> userResponses = responses.stream()
+                .map(r -> new UserResponseDTO(
+                        r.getUserId(),
+                        r.getQuestion().getQuestionId(),
+                        r.getSubmittedAnswer(),
+                        r.getMarksObtained(),
+                        r.getExam().getExamId(),
+                        r.getResponseId()
+                ))
+                .collect(Collectors.toList());
+
+        Map<Integer, Map<Integer, List<UserResponseDTO>>> grouped = userResponses.stream()
+                .collect(Collectors.groupingBy(
+                        UserResponseDTO::getUserId,
+                        Collectors.groupingBy(UserResponseDTO::getExamId)
+                ));
+
+        return ResponseEntity.ok(grouped);
+    }
+
+    @GetMapping("/exam/{examId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Response>> getResponsesByExamId(@PathVariable Integer examId) {
+        List<Response> responses = responseService.getResponsesByExam(examId);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @GetMapping("/{examId}/responses/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserResponseDTO>> getUserResponsesForExam(@PathVariable Integer examId, @PathVariable Integer userId) {
+        List<Response> responses = responseService.getResponsesByUserAndExam(userId, examId);
+
+        List<UserResponseDTO> userResponseDTOs = responses.stream()
+                .map(r -> new UserResponseDTO(
+                        r.getUserId(),
+                        r.getQuestion().getQuestionId(),
+                        r.getSubmittedAnswer(),
+                        r.getMarksObtained(),
+                        r.getExam().getExamId(),
+                        r.getResponseId()
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(userResponseDTOs);
+    }
+}
+-----------------------------------------------------------
+---------------------examquestionmappingcontroller.java-----
+package com.example.demo.Controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.DTO.QuestionAttemptDTO;
+import com.example.demo.DTO.QuestionDTO;
+import com.example.demo.Entity.Exam;
+import com.example.demo.Entity.ExamQuestionMapping;
+import com.example.demo.Entity.QuestionBank;
+import com.example.demo.Repository.ExamRepository;
+import com.example.demo.Repository.QuestionBankRepo;
+import com.example.demo.Service.ExamQuestionMappingService;
+
+@RestController
+@RequestMapping("/mapping")
+public class ExamQuestionMappingController {
+	
+	@Autowired
+	private ExamQuestionMappingService mappingService;
+	@Autowired
+	private ExamRepository examRepository;
+	@Autowired
+	private QuestionBankRepo questionRepo;
+	@Autowired
+	private ExamQuestionMappingService eqms;
+	
+	@PostMapping("/{examId}/{questionId}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ExamQuestionMapping mapQuestionToExam(@PathVariable int examId, @PathVariable int questionId) {
+		Exam exam=examRepository.findById(examId).orElseThrow();
+		
+		QuestionBank question=questionRepo.findById(questionId).orElseThrow();
+		
+		return mappingService.saveMapping(exam,question);
+	}
+	
+	@GetMapping("/exam/{examId}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<ExamQuestionMapping> getQuestionsByExam(@PathVariable int examId){
+		Exam exam=examRepository.findById(examId).orElseThrow();
+		return mappingService.getMappingsByExam(exam);
+	}
+	
+	@GetMapping("/allexams")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<ExamQuestionMapping> getAllExams()
+	{
+		return mappingService.getAllExams();
+	}
+	
+	@GetMapping("/exam/{examId}/questions")
+	@PreAuthorize("hasRole('STUDENT')")
+	public ResponseEntity<List<QuestionAttemptDTO>> getExamQuestions(@PathVariable int examId)
+	{
+		List<QuestionAttemptDTO> questions = mappingService.getAllQuestions(examId);
+		return ResponseEntity.ok(questions);	
+	}
+	@GetMapping("/exam/{examId}/adminQues")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<QuestionDTO>> getExamQuestionsAdmin(@PathVariable int examId)
+	{
+		List<QuestionDTO> questions = mappingService.getAllQuestionsAdmin(examId);
+		return ResponseEntity.ok(questions);	
+	}
+	
+}
+-----------------------------------------------------------------
+------------------------questionbankcontroller.java-------------
+package com.example.demo.Controller;
+
+import com.example.demo.DTO.*;
+import com.example.demo.Mapper.*;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.Entity.QuestionBank;
+import com.example.demo.Exception.EmptyFileException;
+import com.example.demo.Service.QuestionBankService;
+
+
+@RestController
+@RequestMapping("/qb")
+public class QuestionBankController {
+	
+	@Autowired
+	private QuestionBankService qbService;
+	
+	/**
+	 * Adding a single question to the database
+	 * @param dto
+	 * @return ResponseEntity
+	 */
+	@PostMapping("/addQuestion")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<QuestionDTO> addQuestion(@RequestBody QuestionDTO dto) {
+		QuestionBank saved=QuestionMapper.toEntity(dto);
+		qbService.addQues(saved);
+		return ResponseEntity.ok(dto);
+	}
+	/**
+	 * Adding multiple questions to the database
+	 * @param dtos
+	 * @return ResponseEntity<List<QuestionDTO>>
+	 */
+	@PostMapping("/addMultipleQuestions")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<QuestionDTO>> addMultipleQuestions(@RequestBody List<QuestionDTO> dtos) {
+		List<QuestionBank> questions = dtos.stream()
+			.map(QuestionMapper::toEntity)   //It is method reference
+											 // map(dto->QuestionMapper.toEntity(dto)) 
+			.toList();
+		qbService.addMulQues(questions);
+		return ResponseEntity.ok(questions.stream().map(QuestionMapper::toDTO).toList());
+	}
+	/**
+	 * Adding questions from the file
+	 * @param file
+	 * @return ResponseEntity<String>
+	 */
+@PostMapping("/uploadFile")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+	if (file.isEmpty()) {
+		throw new EmptyFileException("Uploaded file is empty. Please select a valid file.");
+		}
+	try {
+		qbService.saveQuestionsFromFile(file);	
+		return ResponseEntity.ok("File uploaded and data saved successfully.");
+	} catch (Exception e) {
+		return ResponseEntity.badRequest().body("Error processing file: " + e.getMessage());
+	}
+}
+
+	
+/**
+ * Retrieving the question with the id
+ * @param id
+ * @return ResponseEntity<QuestionDTO>
+ */
+@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/getquestion/{id}")
+	public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable int id) {
+		return qbService.getById(id)
+			.map(QuestionMapper::toDTO) //object->QuestionMapper.toDTO(object)
+			.map(ResponseEntity::ok)    //dto->ResponseEntity.ok(dto)
+			.orElse(ResponseEntity.notFound().build());
+}
+	
+	//
+	/**
+	 * Retrieving all the questions
+	 * @return List<QuestionDTO>
+	 */
+	@GetMapping("/getAll")
+	@PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
+	public List<QuestionDTO> getAllQuestions() {
+		return qbService.getAll().stream()
+		.map(QuestionMapper::toDTO)
+		.toList();
+}
+	@GetMapping("/getAllQuestions")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<QuestionBank> getQuestions()
+	{
+		return qbService.getQuestions();
+	}
+	
+	 
+	/**
+	 * For student to attempt all questions
+	 * @return List<QuestionAttemptDTO>
+	 */
+	@GetMapping("/attemptQuestions")
+	@PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
+	public List<QuestionAttemptDTO> getQuestionsForAttempt() {
+		return qbService.getAll().stream()
+			.map(QuestionMapper::toAttemptDTO)
+			.toList();
+}
+
+	/**
+	 * For updating a question
+	 * @param id
+	 * @param dto
+	 * @return ResponseEntity<QuestionDTO>
+	 */
+	
+	@PutMapping("/updQuestion/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<QuestionDTO> updateQuestion(@PathVariable int id, @RequestBody QuestionDTO dto) {
+		return qbService.update(id, QuestionMapper.toEntity(dto))
+		.map(QuestionMapper::toDTO) 
+		.map(ResponseEntity::ok)
+		.orElse(ResponseEntity.notFound().build());
+}
+
+	
+	/**
+	 * Deleting a question with id
+	 * @param id
+	 * @return ResponseEntity<String>
+	 */
+	@DeleteMapping("/delQuestion/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<String> deleteQuestion(@PathVariable int id)
+	{
+		qbService.delete(id);
+		return ResponseEntity.ok("Deleted the question with id "+id);
+	}
+	/**
+	 * Retrieving questions based on category
+	 * @param category
+	 * @return List<QuestionDTO>
+	 */
+	@GetMapping("/getByCategory/{category}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<QuestionDTO> getByCategory(@PathVariable String category) {
+		return qbService.getQuestionByCategory(category).stream()
+				.map(QuestionMapper::toDTO)
+				.toList();
+}
+	/**
+	 * //Retrieving Questions based on difficulty
+	 * @param difficulty
+	 * @return List<QuestionDTO>
+	 */
+	@GetMapping("/getByDifficulty/{difficulty}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<QuestionDTO> getByDifficulty(@PathVariable String difficulty) {
+		return qbService.getQuestionByDifficulty(difficulty).stream()
+		.map(QuestionMapper::toDTO)
+		.toList();
+}
+
+
+}
+-----------------------------------------------------------
+----------reportcontroller.java----------------
+package com.example.demo.Controller;
+
+import com.example.demo.DTO.ReportSummaryDTO;
+import com.example.demo.Entity.Report;
+import com.example.demo.Service.ReportService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/analytics/reports")
+public class ReportController {
+
+    @Autowired
+    private ReportService reportService;
+    
+ // Create a new report for a specific user and exam using query parameters
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ReportSummaryDTO> createReport(@RequestParam Integer userId, @RequestParam Integer examId) {
+        Report report = reportService.generateReport(userId, examId);
+
+        ReportSummaryDTO dto = new ReportSummaryDTO(
+            report.getReportId(),
+            report.getExam().getExamId(),
+            report.getUser().getUserId(),
+            report.getTotalMarks(),
+            report.getPerformanceMetrics()
+        );
+
+        return ResponseEntity.ok(dto);
+    }
+
+    
+    
+// Get all reports in the system
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ReportSummaryDTO>> getAllReports() {
+        return ResponseEntity.ok(reportService.getAllReports());
+    }
+
+    @GetMapping("/exam/{examId}")
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
+    public ResponseEntity<List<ReportSummaryDTO>> getReportsByExam(@PathVariable Integer examId) {
+        return ResponseEntity.ok(reportService.getReportsByExamId(examId));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ReportSummaryDTO>> getReportsByUser(@PathVariable Integer userId) {
+        return ResponseEntity.ok(reportService.getReportsByUserId(userId));
+    }
+
+    @GetMapping("/user/{userId}/exam/{examId}")
+    public ResponseEntity<ReportSummaryDTO> getReportByUserAndExam(
+            @PathVariable Integer userId,
+            @PathVariable Integer examId) {
+        return reportService.getReportByUserIdAndExamId(userId, examId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
+ // This method handles DELETE requests to delete reports based on optional userId and/or examId.
+    
+    @DeleteMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteReports(
+        @RequestParam(required = false)  Integer userId,
+        @RequestParam(required = false)  Integer examId) {
+        
+        boolean deleted = reportService.deleteReports(userId, examId);
+        if (deleted) {
+            return ResponseEntity.ok("Reports deleted successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+// Get the ID of the top-performing user
+    @GetMapping("/topper")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ReportSummaryDTO> getTopper() {
+        return reportService.returnTopper();
+    }
+
+
+    
+    
+    @GetMapping("/rank")
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
+    public int getRank(@RequestParam Integer userId){
+    	return reportService.returnRank(userId);
+    }
+    
+ // Delete all reports in the system
+    @DeleteMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteAllReports() {
+        reportService.deleteAllReports();
+        return ResponseEntity.ok("All reports have been deleted successfully.");
+    }
+
+    
+    
+
+    
+    /*
+    @GetMapping("/export")
+    public ResponseEntity<String> exportReports() {
+        String csv = reportService.exportReportsAsCSV();
+        return ResponseEntity.ok(csv);
+    }*/
+    /*
+    @GetMapping("/export")
+    public ResponseEntity<?> exportReportsToFile() {
+        String result = reportService.exportReportsToFile();
+        if (result.equals("No data in reports")) {
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.ok("Reports exported successfully to: " + result);
+    }
+    */
+    
+    
+ 
+
+}
+-------------------------------------------------------------
+----------------usercontroller.java-----------------------------
+package com.example.demo.Controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.DTO.LoginDTO;
+import com.example.demo.DTO.UserDTO;
+import com.example.demo.DTO.UserRegistrationDTO;
+import com.example.demo.DTO.UserRequestDTO;
+import com.example.demo.Entity.Role;
+import com.example.demo.Service.UserService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/examProtal/userModule")
+public class UserController {
+    
+    private UserService userService;
+
+ // Constructor-based dependency injection for UserService
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    // EndPoint to get all Users
+ 	// Only ADMIN can view all users
+    @GetMapping("users")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserRequestDTO>> findAllUsers() {
+        List<UserRequestDTO> users = userService.findAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+ // EndPoint to get user by id
+    @GetMapping("getById/{id}")
+    public ResponseEntity<UserRequestDTO> getUserById(@PathVariable Integer id) {
+        UserRequestDTO user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
+    }
+
+ // EndPoint to register new User
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> registerNewUser(@Valid @RequestBody UserRegistrationDTO dto) {
+        UserDTO registeredUser = userService.registerUser(dto);
+        return ResponseEntity.ok(registeredUser);
+    }
+
+ // EndPoint to login the existing user
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> loginUser(@RequestBody @Valid LoginDTO dto) {
+        UserDTO user = userService.loginUser(dto);
+        return ResponseEntity.ok(user);
+    }
+
+  //EndPoint to update the user profile
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Integer id, @RequestBody @Valid UserRegistrationDTO dto) {
+        UserDTO updatedUser = userService.updateUser(id, dto);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+  //EndPoint to update the role of a user
+  // Only ADMIN can assign roles
+    /*
+    @PutMapping("/{id}/role")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> assignRoleToUser(@PathVariable Long id, @RequestParam Role role) {
+        userService.assignRole(id, role);
+        return ResponseEntity.ok("Role Updated Successfully");
+    }
+    */
+}
+
+----------------------------------------------------------
+-------------------answersubmissiondto.java---------------
+package com.example.demo.DTO;
+
+import lombok.Data;
+
+@Data
+public class AnswerSubmissionDTO {
+	private Integer questionId;
+	private String submittedAnswer;
+
+}
+--------------------------------------------------------
+-----------------examdto.java--------------------------
+package com.example.demo.DTO;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ExamDTO {
+    @NotBlank(message = "Title cannot be blank")
+    private String title;
+
+    private String description;
+
+    @NotNull(message = "Duration cannot be null")
+    @Min(value = 1, message = "Duration must be at least 1 minute")
+    private Integer duration; // Duration in minutes
+
+    @NotNull(message = "Total marks cannot be null")
+    @Min(value = 1, message = "Total marks must be at least 1")
+    private Integer totalMarks;
+}
+----------------------------------------------
+----------------examsubmissiondto--------------
+package com.example.demo.DTO;
+
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class ExamSubmissionDTO {
+	private Integer userId;
+	//private Integer examId;
+	private List<AnswerSubmissionDTO> answers;
+}
+-------------------------------------------------
+---------------examresponsedto.java-------------
+package com.example.demo.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ExamResponseDTO {
+    private Integer examId;
+    private String title;
+    private String description;
+    private Integer duration;
+    private Integer totalMarks;
+}
+-------------------------------------------------
+------------idresponsedto.java--------------------
+package com.example.demo.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class IdResponseDTO {
+    private Integer id;
+    private String message;
+}
+-------------------------------------------
+---------logindto----------------------
+package com.example.demo.DTO;
+
+import lombok.Data;
+import lombok.ToString;
+
+@Data
+@ToString
+public class LoginDTO {
+	private String email;
+	private String password;
+
+}
+--------------------------------
+---------questionattemptdto----------------
+
+package com.example.demo.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class QuestionAttemptDTO {
+	private int questionId;	
+	private String text;
+	private String category;
+	private String difficulty;
+	private String option1;
+	private String option2;
+}
+-------------------------------------------------
+-------------questiondto-------------------------------------
+
+package com.example.demo.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class QuestionDTO {
+	private int questionId;
+	private String text;
+	private String category;
+	private String difficulty;
+	private String option1;
+	private String option2;
+	private String correctAnswer;
+}
+-----------------------------------------------------
+-----------------reportsummarydto----------------------
+package com.example.demo.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ReportSummaryDTO {
+    private Integer reportId;
+    private Integer examId;
+    private Integer userId;
+    private Integer totalMarks;
+    private String performanceMetrics;
+}
+
+-------------------------------------------------
+------------------responsesummarydto-----------------
+package com.example.demo.DTO;
+ 
+import lombok.Data;
+ 
+@Data
+public class ResponseSummaryDTO {
+    private Integer responseId;
+    private Integer questionId;
+    private String submittedAnswer;
+    private Integer marksObtained;
+ 
+    // Constructors
+    public ResponseSummaryDTO(Integer responseId, Integer questionId, String submittedAnswer, Integer marksObtained) {
+        this.responseId = responseId;
+        this.questionId = questionId;
+        this.submittedAnswer = submittedAnswer;
+        this.marksObtained = marksObtained;
+    }
+ 
+    // Getters and Setters
+    // (or use Lombok @Data for brevity)
+}
+---------------------------------------------------------
+------------userdto-------------------------------
+package com.example.demo.DTO;
+
+import com.example.demo.Entity.Role; // Import Role enum
+
+import lombok.Data;
+import lombok.ToString;
+
+@Data
+@ToString
+public class UserDTO {
+	    private Integer userId;
+	    private String name;
+	    private String email;
+	    private Role role; 
+	    private String token;
+}
+--------------------------------------------------------
+-----------userregistrationdto------------------------
+package com.example.demo.DTO;
+
+import lombok.Data;
+import lombok.ToString;
+
+@Data
+@ToString
+public class UserRegistrationDTO {
+    private String name;
+    private String email;
+    private String password;
+    private String confirmPassword;
+}
+
+-------------------------------------------------------
+-------------userrequestdto--------------------------
+package com.example.demo.DTO;
+
+import com.example.demo.Entity.Role;
+
+import lombok.Data;
+import lombok.ToString;
+
+@Data
+@ToString
+public class UserRequestDTO {
+	private Integer userId;
+    private String name;
+    private String email;
+    private Role role;
+
+}
+-----------------------------------------------------
+------------userresponsedto-------------------------
+package com.example.demo.DTO;
+	 
+	//import lombok.AllArgsConstructor;
+import lombok.Data;
+	//import lombok.NoArgsConstructor;
+	 
+	@Data
+	//@NoArgsConstructor
+	//@AllArgsConstructor
+	public class UserResponseDTO {
+	    private Integer responseId;
+	    private Integer questionId;
+	    private String submittedAnswer;
+	    private Integer marksObtained;
+	    private Integer examId;
+	    private Integer userId;
+	 
+	    public UserResponseDTO( Integer userId,Integer questionId, String submittedAnswer, Integer marksObtained, Integer examId,Integer responseId) {
+	        this.responseId = responseId;
+	        this.questionId = questionId;
+	        this.submittedAnswer = submittedAnswer;
+	        this.marksObtained = marksObtained;
+	        this.examId = examId;
+	        this.userId=userId;
+	        }
+	   
+	    // Getters and Setters
+	}
+
+----------------------------------------------------------------
+-----------------------------exam.java-------------------------
+package com.example.demo.Entity;
+
+import java.util.List;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "Exam")
+public class Exam {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "exam_id")
+    private Integer examId;
+
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "duration", nullable = false)
+    private Integer duration; // Duration in minutes
+
+    @Column(name = "total_marks", nullable = false)
+    private Integer totalMarks;
+    
+}
+--------------------------------------------------
+---------------examquestionmapping---------------
+package com.example.demo.Entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name="exam_question")
+public class ExamQuestionMapping {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long id;
+	
+	@ManyToOne
+	@JoinColumn(name="exam_id")
+	private Exam exam;
+	
+	@ManyToOne
+	@JoinColumn(name="question_id")
+	private QuestionBank question;
+}
+----------------------------------------------------------
+-----------questionbank----------------------------
+package com.example.demo.Entity;
+
+
+//import com.example.demo.Entity.Exam;
+
+//import com.example.demo.Entity.Exam;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
+@Data
+@Entity
+@Table(name="Question")
+public class QuestionBank {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int questionId;
+	
+	@Column(unique=true,nullable=false)
+	private String text;
+	
+	@NotBlank(message = "Category cannot be blank")
+	private String category;
+	
+	@NotBlank(message = "Difficulty cannot be blank")
+	private String difficulty;
+	
+	@NotBlank(message = "Option1 cannot be blank")
+	@Pattern(regexp = "^[a-zA-Z0-9 ]+$", message = "Option1 must not contain special characters")
+	private String option1;
+	
+	@NotBlank(message = "Option2 cannot be blank")
+	@Pattern(regexp = "^[a-zA-Z0-9 ]+$", message = "Option2 must not contain special characters")
+	private String option2;
+	
+	private String correctAnswer;
+			
+	public QuestionBank() {
+		
+	}
+	
+	//For testing purpose
+	public void setId(int id) {
+		// TODO Auto-generated method stub
+		questionId=id;
+		
+	}
+}
+----------------------------------------------------
+--------report------------------------------
+package com.example.demo.Entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@Entity
+@NoArgsConstructor   //Default constructor
+
+@Table(name = "reports")
+public class Report {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer reportId;
+    @ManyToOne
+    @JoinColumn(name="exam_id",nullable=false)
+    private Exam exam;
+    @ManyToOne
+    @JoinColumn(name="user_id",nullable=false)
+    private User user;
+    private Integer totalMarks;
+    private String performanceMetrics;
+    
+     
+    
+
+ // Parameterized constructor for easy object creation
+    /*public Report(Integer examId, Integer userId, Integer totalMarks, String performanceMetrics) {
+        this.examId = examId;
+        this.userId = userId;
+        this.totalMarks = totalMarks;
+        this.performanceMetrics = performanceMetrics;
+    }
+    */
+    
+    
+}
+---------------------------------------------
+------------response-----------------------
+package com.example.demo.Entity;
+
+import java.util.Optional;
+
+import com.example.demo.DTO.ExamResponseDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Data
+@Entity
+public class Response {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer responseId;
+	private Integer userId;
+	
+	@ManyToOne
+	@JoinColumn(name="exam_id")
+	private Exam exam;
+	
+	//@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name="question_id")
+	private QuestionBank question;
+	
+	private String submittedAnswer;
+	private Integer marksObtained;
+}
+----------------------------------------------
+----------------role------------------------
+package com.example.demo.Entity;
+
+public enum Role {
+	ADMIN,STUDENT,EXAMINER;
+}
+
+
+-----------------------------------------
+-----------------user-------------------
+package com.example.demo.Entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.ToString;
+
+@Entity
+@Table(name = "users")
+@Data
+@ToString
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer userId;
+
+    @NotBlank(message="Name field must be filled")
+    private String name;
+
+    @NotBlank(message="Email should not be null")
+    @Email(message="Email should be vaild")
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @NotBlank(message="Must set a password")
+    @Size(min=8,message="Password should maintain minimum of 8 charaters")
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+}
+---------------------------------------------------
+---------------customexception------------------
+package com.example.demo.Exception;
+
+public class CustomException extends RuntimeException {
+    public CustomException(String message) {
+        super(message);
+    }
+}
+
+--------------------------------------------
+-----------emptyfileexception---------------
+package com.example.demo.Exception;
+
+
+public class EmptyFileException extends RuntimeException {
+	public EmptyFileException(String message) {
+		super(message);
+ }
+}
+
+---------------------------------------------
+-----------errorresponse--------------------
+package com.example.demo.Exception;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ErrorResponse {
+	private String message;
+
+}
+--------------------------------------
+---------------globalexceptionhandler-----------
+package com.example.demo.Exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+
+import com.example.demo.Exception.CustomException;
+import com.example.demo.Exception.ErrorResponse;
+import com.example.demo.Exception.ResourceNotFoundException;
+
+import jakarta.validation.ConstraintViolationException;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+	/*
+    // Handle validation errors like @Pattern, @NotBlank, etc.
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+            errors.put(error.getField(), error.getDefaultMessage())
+        );
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+    
+    //Handle all other exceptions
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    */
+   
+    @ExceptionHandler(EmptyFileException.class)
+    public ResponseEntity<Map<String, String>> handleEmptyFileException(EmptyFileException ex) {
+    	Map<String, String> error = new HashMap<>();
+    	error.put("error", ex.getMessage());
+    	return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+}
+    @ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<ErrorResponse> RuntimeException(RuntimeException ex){
+	    ErrorResponse error = new ErrorResponse(ex.getMessage());
+	    return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+	}
+	//Handles CustomException
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex){
+    	ErrorResponse error = new ErrorResponse(ex.getMessage());
+    	return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+    }
+
+    //Handles MethodArgumentNotValidException
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
+        String message = ex.getBindingResult()
+                           .getFieldErrors()
+                           .stream()
+                           .map(error -> error.getDefaultMessage())
+                           .collect(Collectors.joining(", "));
+
+        ErrorResponse errorResponse = new ErrorResponse(message);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    //Handles ConstraintViolationException
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolations(ConstraintViolationException ex) {
+        String message = ex.getConstraintViolations()
+                           .stream()
+                           .map(v -> v.getMessage())
+                           .collect(Collectors.joining(", "));
+
+        ErrorResponse errorResponse = new ErrorResponse(message);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleResourceNotFoundException(
+            ResourceNotFoundException ex, WebRequest request) {
+        
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Not Found");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", "")); // Clean up path
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+    
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<Object> handleInvalidInput(InvalidInputException ex) {
+    	Map<String, Object> body = new HashMap<>();
+    	body.put("timestamp", LocalDateTime.now());
+    	body.put("status", HttpStatus.BAD_REQUEST.value());
+    	body.put("error", "Invalid Input");
+    	body.put("message", ex.getMessage());
+    	return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    	}
+
+
+
+
+}
+---------------------------------------------
+------invalidinputexception------------------
+package com.example.demo.Exception;
+
+
+public class InvalidInputException extends RuntimeException {
+	public InvalidInputException(String message) {
+		super(message);
+	}
+}
+
+------------------------------------------------
+---------------resourcenotfoundexception-----------
+package com.example.demo.Exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.NOT_FOUND) // This annotation makes Spring respond with 404 Not Found
+public class ResourceNotFoundException extends RuntimeException {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public ResourceNotFoundException(String message) {
+        super(message);
+    }
+
+    public ResourceNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+-----------------------------------------------------------
+------------------questionmapper------------------------
+
+package com.example.demo.Mapper;
+
+import com.example.demo.DTO.QuestionDTO;
+import com.example.demo.DTO.QuestionAttemptDTO;
+import com.example.demo.Entity.ExamQuestionMapping;
+import com.example.demo.Entity.QuestionBank;
+
+public class QuestionMapper {
+
+		public static QuestionDTO toDTO(QuestionBank qb) {
+			return new QuestionDTO(
+				qb.getQuestionId(),
+				qb.getText(),
+				qb.getCategory(),
+				qb.getDifficulty(),
+				qb.getOption1(),
+				qb.getOption2(),
+				qb.getCorrectAnswer()
+				);
+		}
+
+		public static QuestionAttemptDTO toAttemptDTO(QuestionBank qb) {
+			return new QuestionAttemptDTO(
+				qb.getQuestionId(),
+				qb.getText(),
+				qb.getCategory(),
+				qb.getDifficulty(),
+				qb.getOption1(),
+				qb.getOption2()
+				);
+		}
+
+		public static QuestionBank toEntity(QuestionDTO dto) {
+			QuestionBank qb = new QuestionBank();
+			qb.setQuestionId(dto.getQuestionId());
+			qb.setText(dto.getText());
+			qb.setCategory(dto.getCategory());
+			qb.setDifficulty(dto.getDifficulty());
+			qb.setOption1(dto.getOption1());
+			qb.setOption2(dto.getOption2());
+			qb.setCorrectAnswer(dto.getCorrectAnswer());
+			return qb;
+		}
+		
+		/*public static QuestionAttemptDTO mapToDTO(ExamQuestionMapping mapping)
+		{
+			QuestionBank q=mapping.getQuestion();
+			return new QuestionAttemptDTO(
+					q.getQuestionId(),
+					q.getText(),
+					q.getCategory(),
+					q.getDifficulty(),
+					q.getOption1(),
+					q.getOption2()
+					);
+					
+		}
+		*/
+		public static QuestionAttemptDTO mapToQuestionAttemptDTO(ExamQuestionMapping mapping)
+		{
+			QuestionBank q=mapping.getQuestion();
+			return new QuestionAttemptDTO(
+					q.getQuestionId(),
+					q.getText(),
+					q.getCategory(),
+					q.getDifficulty(),
+					q.getOption1(),
+					q.getOption2()
+					);
+		}
+		public static QuestionDTO mapToQuestionDTO(ExamQuestionMapping mapping)
+		{
+			QuestionBank q=mapping.getQuestion();
+			return new QuestionDTO(
+					q.getQuestionId(),
+					q.getText(),
+					q.getCategory(),
+					q.getDifficulty(),
+					q.getOption1(),
+					q.getOption2(),
+					q.getCorrectAnswer()
+					
+					);
+		}
+		
+}
+------------------------------------------------------------------
+------------examquestonmappingrepo-----------------------------
+package com.example.demo.Repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.Entity.Exam;
+import com.example.demo.Entity.ExamQuestionMapping;
+import com.example.demo.Entity.QuestionBank;
+
+public interface ExamQuestionMappingRepo extends JpaRepository<ExamQuestionMapping , Long>{
+
+	List<ExamQuestionMapping> findByExam(Exam exam);
+	
+	List<ExamQuestionMapping> findByQuestion(QuestionBank question);
+	
+	List<ExamQuestionMapping> findByExamExamId(int examId);
+}
+--------------------------------------------------
+-----------examrepository-------------------------
+package com.example.demo.Repository;
+
+import com.example.demo.Entity.Exam;
+import com.example.demo.Entity.Response;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ExamRepository extends JpaRepository<Exam, Integer> {
+    // JpaRepository provides methods like save(), findById(), findAll(), deleteById(), etc.
+	//List<Response> findByUserId(Integer userId);
+}
+-------------------------------------------------------
+----------------questionbankrepo---------------------
+package com.example.demo.Repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import org.springframework.stereotype.Repository;
+
+import com.example.demo.Entity.QuestionBank;
+
+@Repository
+public interface QuestionBankRepo extends JpaRepository<QuestionBank,Integer>{
+	public List<QuestionBank> findByCategory(String category);
+	
+	public List<QuestionBank> findByDifficulty(String difficulty);
+}
+------------------------------------------------------
+-----------reportrepository-------------------------
+package com.example.demo.Repository;
+
+import com.example.demo.Entity.Report;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface ReportRepository extends JpaRepository<Report, Integer> {
+	
+
+	/**
+     * Finds all reports associated with a specific exam ID.
+     *
+     * @param examId the ID of the exam
+     * @return a list of reports for the given exam
+     */
+   // List<Report> findByExamId(Integer examId);
+
+    /**
+     * Finds all reports associated with a specific user ID.
+     *
+     * @param userId the ID of the user
+     * @return a list of reports for the given user
+     */
+    //List<Report> findByUserId(Integer userId);
+
+    /**
+     * Finds a report for a specific user and exam combination.
+     *
+     * @param userId the ID of the user
+     * @param examId the ID of the exam
+     * @return an optional containing the report if found, or empty otherwise
+     */
+    //Optional<Report> findByUserIdAndExamId(Integer userId, Integer examId);
+    
+
+    /**
+     * Retrieves the user ID and total marks for each user, ordered by total marks in descending order.
+     * Used to determine the top-performing user(s).
+     *
+     * @return a list of object arrays where each array contains [userId, totalMarks]
+     */
+	@Query("SELECT r FROM Report r WHERE r.totalMarks = (SELECT MAX(r2.totalMarks) FROM Report r2)")
+	List<Report> findTopperByTotalMarks();
+
+
+
+	List<Report> findByExamExamId(Integer examId);
+
+
+	List<Report> findByUserUserId(Integer userId);
+
+
+	//Optional<Report> findByUserUserIdAndExamExamId(Integer userId, Integer examId);
+
+
+	Optional<Report> findByUserUserIdAndExamExamId(Integer userId, Integer examId);
+
+
+}
+---------------------------------------------------
+---------------responserepository------------------
+package com.example.demo.Repository;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.demo.Entity.Response;
+
+@Repository
+public interface ResponseRepository extends JpaRepository<Response, Long> {
+	
+
+	//<Response> findByUserId(Long userId);
+
+	//List<Response> findByUserId(Integer userId);
+
+	//List<Response> findByUserIdAndExamExamId(Integer userId, Integer examId);
+
+	List<Response> findByExamExamId(Integer examId);
+
+	List<Response> findByUserId(Integer userId);
+
+	List<Response> findByUserIdAndExamExamId(Integer userId, Integer examId);
+
+}
+-------------------------------------------------
+-----------------userrepository------------------
+package com.example.demo.Repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.demo.Entity.User;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
+    Optional<User> findByEmail(String email);
+}
+
+------------------------------------------
+---------------customuserdetailsservice-----------
+package com.example.demo.Service;
+
+import com.example.demo.Entity.User;
+import com.example.demo.Repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+//import java.util.Collection;
+import java.util.List;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private final UserRepository userRepository;
+
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+        // Create a list of GrantedAuthorities based on the user's role
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())); // Spring Security convention for roles
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                authorities
+        );
+    }
+}
+----------------------------------------------
+------------------examquestionmappingservice-----------------
+package com.example.demo.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.Mapper.QuestionMapper;
+import com.example.demo.DTO.QuestionAttemptDTO;
+import com.example.demo.DTO.QuestionDTO;
+import com.example.demo.Entity.Exam;
+import com.example.demo.Entity.ExamQuestionMapping;
+import com.example.demo.Entity.QuestionBank;
+import com.example.demo.Repository.ExamQuestionMappingRepo;
+import com.example.demo.Repository.ExamRepository;
+import com.example.demo.Repository.QuestionBankRepo;
+
+@Service
+public class ExamQuestionMappingService {
+
+	@Autowired
+	private ExamQuestionMappingRepo mappingRepository;
+	
+	@Autowired
+	private QuestionBankRepo qbRepo;
+	@Autowired
+	private ExamRepository examRepo;
+	public ExamQuestionMapping saveMapping(Exam exam,QuestionBank question)
+	{
+		ExamQuestionMapping mapping=new ExamQuestionMapping();
+		mapping.setExam(exam);
+		mapping.setQuestion(question);
+		return mappingRepository.save(mapping);
+	}
+	
+	public List<ExamQuestionMapping> getMappingsByExam(Exam exam){
+		return mappingRepository.findByExam(exam);
+	}
+	
+	public List<ExamQuestionMapping> getMappingsByQuestion(QuestionBank question)
+	{
+		return mappingRepository.findByQuestion(question);
+	}
+	
+	public List<ExamQuestionMapping> getAllExams()
+	{
+		return mappingRepository.findAll();
+	}
+	/*
+	public List<QuestionAttemptDTO> getAllQuestionsForExam(int examId)
+	{
+		Exam exam=examRepo.findById(examId).orElseThrow();
+		List<ExamQuestionMapping> mappings=qbRepo.findAll().stream()
+				.filter(q->q.)
+				.collect(Collectors.toList());
+	}
+	*/
+	
+	public  List<QuestionAttemptDTO> getAllQuestions(int examId)
+	{
+		List<ExamQuestionMapping> mappings=mappingRepository.findByExamExamId(examId);
+		return mappings.stream()
+				.map(QuestionMapper::mapToQuestionAttemptDTO)
+				.collect(Collectors.toList());
+	}
+
+	public List<QuestionDTO> getAllQuestionsAdmin(int examId) {
+		// TODO Auto-generated method stub
+		List<ExamQuestionMapping> mappings=mappingRepository.findByExamExamId(examId);
+		return mappings.stream()
+				.map(QuestionMapper::mapToQuestionDTO)
+				.collect(Collectors.toList());
+	}
+	
+
+}
+------------------------------------------------------------
+-----------examservice-----------------------------
+package com.example.demo.Service;
+
+import com.example.demo.DTO.ExamDTO;
+import com.example.demo.DTO.ExamResponseDTO;
+import com.example.demo.Entity.Exam;
+import com.example.demo.Entity.Role;
+import com.example.demo.Entity.User;
+import com.example.demo.Exception.CustomException;
+import com.example.demo.Repository.ExamRepository;
+import com.example.demo.Repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class ExamService {
+    @Autowired
+    private ExamRepository examRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
+
+    public ExamResponseDTO createExam(ExamDTO examDTO) {
+    	//Convert DTO to Entity
+        Exam exam = new Exam();
+        exam.setTitle(examDTO.getTitle());
+        exam.setDescription(examDTO.getDescription());
+        exam.setDuration(examDTO.getDuration());
+        exam.setTotalMarks(examDTO.getTotalMarks());
+        //Save Entity to Database
+        Exam savedExam = examRepository.save(exam);
+        //Convert entity back to Response DTO
+        return convertToExamResponseDTO(savedExam);
+    }
+
+    public List<ExamResponseDTO> getAllExams() {
+    	//Get all entities from DB
+        return examRepository.findAll().stream()
+        		//Convert each entity to DTO using stream API
+                .map(this::convertToExamResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Optional<ExamResponseDTO> getExamById(Integer id) {
+    	//Find Entity by Id
+        return examRepository.findById(id)
+        		//If found,convert to DTO
+                .map(this::convertToExamResponseDTO);
+    }
+    /*
+    public Exam getExamById(Long id)
+    {
+    	return examRepository.findById(id).orElse(null);
+    }
+    */
+
+    public ExamResponseDTO updateExam(Integer id, ExamDTO examDetails) {
+        Optional<Exam> optionalExam = examRepository.findById(id);
+        if (optionalExam.isPresent()) {
+            Exam existingExam = optionalExam.get();
+            existingExam.setTitle(examDetails.getTitle());
+            existingExam.setDescription(examDetails.getDescription());
+            existingExam.setDuration(examDetails.getDuration());
+            existingExam.setTotalMarks(examDetails.getTotalMarks());
+            //Update fields from DTO
+            Exam updatedExam = examRepository.save(existingExam);
+            return convertToExamResponseDTO(updatedExam);
+        } else {
+            return null; 
+        }
+    }
+
+    public boolean deleteExam(Integer id) {
+        if (examRepository.existsById(id)) {
+            examRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean examExists(Integer examId) {
+        return examRepository.existsById(examId);
+    }
+    
+    public void assignRole(Integer userId, Role role) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException("User not found"));
+        user.setRole(role);
+        userRepository.save(user);
+    }
+
+    // Helper method to convert Entity to DTO
+    private ExamResponseDTO convertToExamResponseDTO(Exam exam) {
+        return new ExamResponseDTO(
+                exam.getExamId(),
+                exam.getTitle(),
+                exam.getDescription(),
+                exam.getDuration(),
+                exam.getTotalMarks()
+        );
+    }
+}
+-------------------------------------------------
+------------------questionbankservice---------------
+package com.example.demo.Service;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.Repository.QuestionBankRepo;
+
+import com.example.demo.Entity.QuestionBank;
+import com.example.demo.Exception.EmptyFileException;
+
+
+@Service
+public class QuestionBankService {
+	
+	@Autowired
+	private QuestionBankRepo qbRepo;
+
+	public QuestionBank addQues(QuestionBank q)
+	{
+		return qbRepo.save(q);
+	}
+	
+	public void addMulQues(List<QuestionBank> question) {
+		for(QuestionBank qb:question)
+		{
+			qbRepo.save(qb);
+		}
+	}
+	
+	public void saveQuestionsFromFile(MultipartFile file) throws Exception {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+		String line;
+		boolean skipHeader = true;
+		boolean hasData = false;
+		
+		while ((line = reader.readLine()) != null) {
+			if (skipHeader) {
+				skipHeader = false;
+				continue;
+			}
+			
+			String[] data = line.split(",");
+			
+			QuestionBank q = new QuestionBank();
+					q.setText(data[0]);
+					q.setCategory(data[1]);
+					q.setDifficulty(data[2]);
+					q.setOption1(data[3]);
+					q.setOption2(data[4]);
+					q.setCorrectAnswer(data[5]);
+					addQues(q);
+					hasData=true;
+			}
+		if(!hasData)
+		{
+			throw new EmptyFileException("The uploaded file contains only headers and no data rows.");
+		}
+	}
+
+	public List<QuestionBank> getAll()
+	{
+		return qbRepo.findAll();
+	}
+	
+	public Optional<QuestionBank> getById(int id)
+	{
+		return qbRepo.findById(id);
+	}
+	
+	public List<QuestionBank> getQuestionByCategory(String category)
+	{
+		return qbRepo.findByCategory(category);
+	}
+	
+	public List<QuestionBank> getQuestionByDifficulty(String difficulty)
+	{
+		return qbRepo.findByDifficulty(difficulty);
+	}
+	
+	public Optional<QuestionBank> update(int id,QuestionBank qb)
+	{
+		return qbRepo.findById(id).map(question->{
+			question.setText(qb.getText());
+			question.setCategory(qb.getCategory());
+			question.setDifficulty(qb.getDifficulty());
+			question.setOption1(qb.getOption1());
+			question.setOption2(qb.getOption2());
+			question.setCorrectAnswer(qb.getCorrectAnswer());
+			
+			return qbRepo.save(question);
+		});
+	}
+	
+	public void delete(int id)
+	{
+		if(qbRepo.existsById(id))
+		{
+			qbRepo.deleteById(id);	
+		}
+		else {
+			throw new NoSuchElementException("Question with ID "+ id+" not found");
+		}
+	}
+
+	public List<QuestionBank> getQuestions() {
+		// TODO Auto-generated method stub
+		return qbRepo.findAll();
+	}	
+}
+-------------------------------------------------------
+----------reportservice----------------------------------
+package com.example.demo.Service;
+
+import com.example.demo.DTO.ReportSummaryDTO;
+import com.example.demo.Entity.Exam;
+import com.example.demo.Entity.Report;
+import com.example.demo.Entity.Response;
+import com.example.demo.Entity.User;
+import com.example.demo.Repository.ReportRepository;
+import com.example.demo.Repository.ResponseRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Optional;
+
+@Service //Marks this class as a Spring service component
+
+public class ReportService {
+
+    @Autowired
+    private ReportRepository reportRepository;
+
+    @Autowired
+    private ResponseRepository responseRepository;
+
+    public Report generateReport(Integer userId, Integer examId) {
+        List<Response> responses = responseRepository.findByUserIdAndExamExamId(userId, examId);
+
+        int totalMarks = responses.stream()
+                .mapToInt(Response::getMarksObtained)
+                .sum();
+                
+
+        String performance;
+        if (totalMarks > 60) {
+            performance = "First Class";
+        } else if (totalMarks > 40) {
+            performance = "Second Class";
+        } else {
+            performance = "Fail";
+        }
+        
+        User user=new User();
+        user.setUserId(userId);
+        
+        Exam exam=new Exam();
+        exam.setExamId(examId);
+        
+        Report report = new Report();
+        report.setUser(user);
+        report.setExam(exam);
+        report.setTotalMarks(totalMarks);
+        report.setPerformanceMetrics(performance);
+        
+        return reportRepository.save(report);
+    }
+
+
+    public List<ReportSummaryDTO> getReportsByExamId(Integer examId) {
+        List<Report> reports = reportRepository.findByExamExamId(examId);
+        if (reports.isEmpty()) {
+            throw new IllegalArgumentException("Exam ID not found: " + examId);
+        }
+        return reports.stream()
+            .map(this::mapToDto)
+            .toList();
+    }
+
+    public List<ReportSummaryDTO> getReportsByUserId(Integer userId) {
+        List<Report> reports = reportRepository.findByUserUserId(userId);
+        if (reports.isEmpty()) {
+            throw new IllegalArgumentException("User ID not found: " + userId);
+        }
+        return reports.stream()
+            .map(this::mapToDto)
+            .toList();
+    }
+
+    public Optional<ReportSummaryDTO> getReportByUserIdAndExamId(Integer userId, Integer examId) {
+        return reportRepository.findByUserUserIdAndExamExamId(userId, examId)
+            .map(this::mapToDto);
+    }
+
+    public List<ReportSummaryDTO> getAllReports() {
+        List<Report> reports = reportRepository.findAll();
+        if (reports.isEmpty()) {
+            throw new IllegalArgumentException("No reports found");
+        }
+        return reports.stream()
+            .map(this::mapToDto)
+            .toList();
+    }
+
+    // Mapping helper
+    private ReportSummaryDTO mapToDto(Report report) {
+        return ReportSummaryDTO.builder()
+            .reportId(report.getReportId())
+            .examId(report.getExam().getExamId())
+            .userId(report.getUser().getUserId())
+            .totalMarks(report.getTotalMarks())
+            .performanceMetrics(report.getPerformanceMetrics())
+            .build();
+    }
+
+    
+    public boolean deleteReports(Integer userId, Integer examId) {
+        if (userId != null && examId != null) {
+            Optional<Report> report = reportRepository.findByUserUserIdAndExamExamId(userId, examId);
+            if (report.isPresent()) {
+                reportRepository.delete(report.get());
+                return true;
+            } else {
+                throw new IllegalArgumentException("No report found for the given userId and examId.");
+            }
+        } else if (userId != null) {
+            List<Report> reports = reportRepository.findByUserUserId(userId);
+            if (!reports.isEmpty()) {
+                reportRepository.deleteAll(reports);
+                return true;
+            } else {
+                throw new IllegalArgumentException("No reports found for the given userId.");
+            }
+        } else if (examId != null) {
+            List<Report> reports = reportRepository.findByExamExamId(examId);
+            if (!reports.isEmpty()) {
+                reportRepository.deleteAll(reports);
+                return true;
+            } else {
+                throw new IllegalArgumentException("No reports found for the given examId.");
+            }
+        } else {
+            throw new IllegalArgumentException("At least one of userId or examId must be provided.");
+        }
+    }
+    
+    
+    public void deleteAllReports() {
+        List<Report> reports = reportRepository.findAll();
+        if (reports.isEmpty()) {
+            throw new IllegalArgumentException("No reports found to delete.");
+        }
+        reportRepository.deleteAll(reports);
+    }
+
+
+    
+    
+    
+    public ResponseEntity<ReportSummaryDTO> returnTopper() {
+        List<Report> result = reportRepository.findTopperByTotalMarks();
+
+        if (!result.isEmpty()) {
+            Report report = result.get(0);
+            ReportSummaryDTO dto = ReportSummaryDTO.builder()
+                .reportId(report.getReportId())
+                .examId(report.getExam().getExamId())
+                .userId(report.getUser().getUserId())
+                .totalMarks(report.getTotalMarks())
+                .performanceMetrics(report.getPerformanceMetrics())
+                .build();
+
+            return ResponseEntity.ok(dto);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+
+    
+    /*public int returnRank(Integer userId){
+    	List<Report> userTotals = reportRepository.findTopperByTotalMarks();
+    	if (!userTotals.isEmpty()) {
+    		
+    		    for (int i = 0; i < userTotals.size(); i++) {
+    		        Object[] entry = userTotals.get(i).;
+    		        Long user = (Long) entry[0]; // userId is at index 0
+    		        if (user.equals(userId)) {
+    		            return i + 1; // rank is index + 1
+    		        }
+    		    }
+    		}
+    	 throw new IllegalArgumentException("No reports found for the given userId.");
+    }
+    */
+    public int returnRank(Integer userId) {
+        List<Report> userTotals = reportRepository.findTopperByTotalMarks(); // assumed sorted DESC by totalMarks
+        if (!userTotals.isEmpty()) {
+            for (int i = 0; i < userTotals.size(); i++) {
+                Report report = userTotals.get(i);
+                if (report.getUser().getUserId().equals(userId)) {
+                    return i + 1; // rank is index + 1
+                }
+            }
+        }
+        throw new IllegalArgumentException("No reports found for the given userId.");
+    }
+
+    /*
+    public String exportReportsAsCSV() {
+        List<Report> reports = reportRepository.findAll();
+        if (reports.isEmpty()) {
+            return "No data in reports";
+        }
+
+        StringBuilder csvBuilder = new StringBuilder();
+        csvBuilder.append("Report ID,Exam ID,User ID,Total Marks,Performance Metrics\n");
+        for (Report report : reports) {
+            csvBuilder.append(String.format("%d,%d,%d,%.2f,%s\n",
+                report.getReportId(),
+                report.getExamId(),
+                report.getUserId(),
+                report.getTotalMarks(),
+                report.getPerformanceMetrics()));
+        }
+        return csvBuilder.toString();
+    }*/
+        /*
+        public String exportReportsToFile() {
+            List<Report> reports = reportRepository.findAll();
+            if (reports.isEmpty()) {
+                return "No data in reports";
+            }
+
+            String filePath = "reports_export.csv";
+            try (PrintWriter writer = new PrintWriter(new File(filePath))) {
+                writer.println("Report ID,Exam ID,User ID,Total Marks,Performance Metrics");
+                for (Report report : reports) {
+                    writer.printf("%d,%d,%d,%.2f,%s%n",
+                        report.getReportId(),
+                        report.getExamId(),
+                        report.getUserId(),
+                        report.getTotalMarks(),
+                        report.getPerformanceMetrics());
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return "Error exporting reports";
+            }
+
+            return filePath;
+        }
+
+
+*/
+
+
+}
+-----------------------------------------------
+-----------responseservice-------------------------
+package com.example.demo.Service;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.DTO.AnswerSubmissionDTO;
+import com.example.demo.DTO.ExamSubmissionDTO;
+import com.example.demo.DTO.ResponseSummaryDTO;
+import com.example.demo.Entity.Exam;
+import com.example.demo.Entity.QuestionBank;
+import com.example.demo.Entity.Response;
+import com.example.demo.Exception.ResourceNotFoundException;
+import com.example.demo.Repository.ExamRepository;
+import com.example.demo.Repository.QuestionBankRepo;
+import com.example.demo.Repository.ResponseRepository;
+import com.example.demo.Repository.UserRepository;
+
+@Service
+public class ResponseService {
+
+    @Autowired
+    private ExamRepository examRepository;
+    
+    @Autowired
+    private QuestionBankRepo qbRepo;
+    @Autowired
+    private ResponseRepository responseRepository;
+    @Autowired
+    private UserRepository userRepo;
+
+    public Response submitResponse(Response response) {
+    	if(userRepo.existsById(response.getUserId()))
+    	{	
+        return responseRepository.save(response);
+    	}
+    	else {
+    		throw new ResourceNotFoundException("No user found with "+response.getUserId());
+    	}
+    }
+
+    public List<Response> getResponsesByUser(Integer userId) {
+    	List<Response> responses = responseRepository.findByUserId(userId);
+    		if (responses.isEmpty()) {
+    			throw new ResourceNotFoundException("No responses found for user ID: " + userId);
+    		}
+        return responseRepository.findByUserId(userId);
+    }
+
+    public List<Response> getResponsesByExam(Integer examId) {
+        if (!examRepository.existsById(examId)) {
+            throw new ResourceNotFoundException("Exam not found with ID: " + examId);
+        }
+        return responseRepository.findByExamExamId(examId);
+    }
+
+    public List<Response> getResponsesByUserAndExam(Integer userId, Integer examId) {
+        if (!examRepository.existsById(examId)) {
+            throw new ResourceNotFoundException("Exam not found with ID: " + examId);
+        }
+        return responseRepository.findByUserIdAndExamExamId(userId, examId);
+    }
+
+	public ResponseEntity<List<ResponseSummaryDTO>> submitExam(Integer examId, ExamSubmissionDTO submissionDTO) {
+		// TODO Auto-generated method stub
+		List<ResponseSummaryDTO> responseSummaries = new ArrayList<>();
+        Optional<Exam> examOpt = examRepository.findById(examId);
+        		
+
+        if (!examOpt.isPresent()) {
+            throw new ResourceNotFoundException("Exam not found with ID: " + examId);
+        }
+
+        Exam exam = examOpt.get();
+
+        for (AnswerSubmissionDTO ans : submissionDTO.getAnswers()) {
+            Optional<QuestionBank> questionOpt = qbRepo.findById(ans.getQuestionId());
+            		
+            if (!questionOpt.isPresent()) {
+                throw new ResourceNotFoundException("Question not found with ID: " + ans.getQuestionId());
+            }
+
+            QuestionBank question = questionOpt.get();
+           
+            
+            Response response = new Response();
+            response.setUserId(submissionDTO.getUserId());
+            response.setExam(exam);
+            response.setQuestion(question);
+            response.setSubmittedAnswer(ans.getSubmittedAnswer());
+
+           int marks = question.getCorrectAnswer().equals(ans.getSubmittedAnswer()) ? 2 : 0;
+            response.setMarksObtained(marks);
+            Response savedResponse = submitResponse(response);
+
+            ResponseSummaryDTO summary = new ResponseSummaryDTO(
+                    savedResponse.getResponseId(),
+                    question.getQuestionId(),
+                    ans.getSubmittedAnswer(),
+                    marks
+            );
+            responseSummaries.add(summary);
+        }
+
+        return ResponseEntity.ok(responseSummaries);
+	}
+}
+-------------------------------------------------------
+------------------userservice--------------------------
+package com.example.demo.Service;
+
+import com.example.demo.DTO.LoginDTO;
+import com.example.demo.DTO.UserDTO;
+import com.example.demo.DTO.UserRegistrationDTO;
+import com.example.demo.DTO.UserRequestDTO;
+import com.example.demo.Entity.Role;
+
+import java.util.List;
+
+public interface UserService {
+    List<UserRequestDTO> findAllUsers();
+    UserRequestDTO getUserById(Integer userId);
+    UserDTO registerUser(UserRegistrationDTO dto);
+    UserDTO loginUser(LoginDTO dto);
+    UserDTO updateUser(Integer userId, UserRegistrationDTO dto);
+    //void assignRole(Long userId, Role role);
+}
+----------------------------------------------------
+----------------userserviceinmpl------------------------
+package com.example.demo.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.DTO.LoginDTO;
+import com.example.demo.DTO.UserDTO;
+import com.example.demo.DTO.UserRegistrationDTO;
+import com.example.demo.DTO.UserRequestDTO;
+import com.example.demo.Exception.CustomException;
+import com.example.demo.Entity.Role;
+import com.example.demo.Entity.User;
+import com.example.demo.Repository.UserRepository;
+import com.example.demo.Config.JwtUtil;
+
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+ 
+    private final AuthenticationManager authenticationManager;
+
+    private final JwtUtil jwtUtil;
+
+   
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+    }
+
+
+
+     //Retrieves all users from the database and converts them to UserRequestDTOs.
+    @Override
+    public List<UserRequestDTO> findAllUsers() {
+        List<User> userList = userRepository.findAll();
+        List<UserRequestDTO> dtoList = new ArrayList<>();
+
+        for (User user : userList) {
+            UserRequestDTO dto = requestToDTO(user);
+            dtoList.add(dto);
+        }
+
+        return dtoList;
+    }
+
+
+     //Retrieves a user by their ID.
+    @Override
+    public UserRequestDTO getUserById(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException("User not found"));
+        return requestToDTO(user);
+    }
+
+    /**
+     * Registers a new user after validating email uniqueness and password confirmation.
+     * Assigns ADMIN role to the first user, STUDENT to others.
+     */
+    @Override
+    public UserDTO registerUser(UserRegistrationDTO dto) {
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new CustomException("Email already exists");
+        }
+
+        String password = dto.getPassword();
+        String confirmPassword = dto.getConfirmPassword();
+
+        if (password == null || confirmPassword == null || !password.equals(confirmPassword)) {
+            throw new CustomException("Password and confirm password do not match");
+        }
+
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        // Assign ADMIN role to the first user, STUDENT to others
+        if (userRepository.count() == 0) {
+            user.setRole(Role.ADMIN);
+        } else {
+            user.setRole(Role.STUDENT);
+        }
+
+        return mapToDTO(userRepository.save(user));
+    }
+
+
+    //Authenticates a user by email and password.
+    @Override
+    public UserDTO loginUser(LoginDTO dto) {
+        // Authenticate the user using Spring Security's AuthenticationManager
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
+        );
+
+        // If authentication is successful, generate JWT
+        if (authentication.isAuthenticated()) {
+            User user = userRepository.findByEmail(dto.getEmail())
+                    .orElseThrow(() -> new CustomException("User not found after authentication "));
+
+            // Generate JWT token
+            UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                    user.getEmail(), user.getPassword(),
+                    List.of(() -> "ROLE_" + user.getRole().name()) // Convert Role to GrantedAuthority
+            );
+            String token = jwtUtil.generateToken(userDetails);
+
+            // Create a UserDTO with the token
+            UserDTO userDTO = mapToDTO(user);
+            userDTO.setToken(token); // Set the generated token
+            return userDTO;
+        } else {
+            throw new CustomException("Invalid credentials");
+        }
+    }
+
+    //Updates user details by ID.
+    @Override
+    public UserDTO updateUser(Integer userId, UserRegistrationDTO dto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException("User not found"));
+
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword())); 
+
+        return mapToDTO(userRepository.save(user));
+    }
+
+    /**
+     * Assigns a new role to a user.
+     * Only ADMIN can update
+     */
+   /* @Override
+   
+    public void assignRole(Long userId, Role role) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException("User not found"));
+        user.setRole(role);
+        userRepository.save(user);
+    }
+*/
+
+    //Converts a User entity to a UserDTO.
+    private UserDTO mapToDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setUserId(user.getUserId());
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setRole(user.getRole()); // Include role in UserDTO
+        return dto;
+    }
+
+
+    //Converts a User entity to a UserRequestDTO.
+    private UserRequestDTO requestToDTO(User user) {
+        UserRequestDTO dto = new UserRequestDTO();
+        dto.setUserId(user.getUserId());
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        // Password is intentionally excluded for security
+        dto.setRole(user.getRole());
+        return dto;
+    }
+}
+-------------------------------------------------------------------
