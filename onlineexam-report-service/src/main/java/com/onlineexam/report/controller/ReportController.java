@@ -10,17 +10,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
 @RestController
 @RequestMapping("/analytics/reports")
 public class ReportController {
 
     @Autowired
     private ReportService reportService;
-
-    // Create a new report for a specific user and exam using query parameters
+// Create a new report for a specific user and exam using query parameters
     // Removed @PreAuthorize as security is disabled for this service.
-    // Removed @RequestHeader as this service no longer expects JWT from clients.
+// Removed @RequestHeader as this service no longer expects JWT from clients.
     @PostMapping
     public ResponseEntity<ReportSummaryDTO> createReport(@RequestParam Integer userId, @RequestParam Integer examId) {
         // No authorizationHeader is passed here, assuming Response Service also handles its own security
@@ -34,7 +32,6 @@ public class ReportController {
                 report.getTotalMarks(),
                 report.getPerformanceMetrics()
         );
-
         return ResponseEntity.ok(dto);
     }
 
@@ -66,7 +63,7 @@ public class ReportController {
     }
 
     // This method handles DELETE requests to delete reports based on optional userId and/or examId.
-    // Removed @PreAuthorize
+// Removed @PreAuthorize
     @DeleteMapping
     public ResponseEntity<String> deleteReports(
         @RequestParam(required = false)  Integer userId,
@@ -100,5 +97,11 @@ public class ReportController {
     public ResponseEntity<String> deleteAllReports() {
         reportService.deleteAllReports();
         return ResponseEntity.ok("All reports have been deleted successfully.");
+    }
+
+    @GetMapping("/user/{userId}/examCount")
+    public ResponseEntity<Long> getExamCountForUser(@PathVariable Integer userId) {
+        long examCount = reportService.countExamsByUserId(userId);
+        return ResponseEntity.ok(examCount);
     }
 }

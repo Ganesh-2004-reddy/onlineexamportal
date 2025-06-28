@@ -13,13 +13,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
 @Service
 public class ReportService {
 
     @Autowired
     private ReportRepository reportRepository;
-
     @Autowired
     private ResponseFeignClient responseFeignClient; // Autowire the Feign client
 
@@ -39,7 +37,6 @@ public class ReportService {
         }
 
         List<ResponseSummaryDTO> responses = responseEntity.getBody();
-
         if (responses.isEmpty()) {
             throw new IllegalArgumentException("No responses found for user " + userId + " and exam " + examId + " from Response Service.");
         }
@@ -47,7 +44,6 @@ public class ReportService {
         int totalMarks = responses.stream()
                 .mapToInt(ResponseSummaryDTO::getMarksObtained)
                 .sum();
-
         String performance;
         if (totalMarks > 60) {
             performance = "First Class";
@@ -69,7 +65,8 @@ public class ReportService {
     public List<ReportSummaryDTO> getReportsByExamId(Integer examId) {
         List<Report> reports = reportRepository.findByExamId(examId);
         if (reports.isEmpty()) {
-            throw new ResourceNotFoundException("Exam ID not found: " + examId); // Use specific exception
+            throw new ResourceNotFoundException("Exam ID not found: " + examId);
+// Use specific exception
         }
         return reports.stream()
                 .map(this::mapToDto)
@@ -79,7 +76,8 @@ public class ReportService {
     public List<ReportSummaryDTO> getReportsByUserId(Integer userId) {
         List<Report> reports = reportRepository.findByUserId(userId);
         if (reports.isEmpty()) {
-            throw new ResourceNotFoundException("No reports found for user ID: " + userId); // Use specific exception
+            throw new ResourceNotFoundException("No reports found for user ID: " + userId);
+// Use specific exception
         }
         return reports.stream()
                 .map(this::mapToDto)
@@ -94,7 +92,8 @@ public class ReportService {
     public List<ReportSummaryDTO> getAllReports() {
         List<Report> reports = reportRepository.findAll();
         if (reports.isEmpty()) {
-            throw new ResourceNotFoundException("No reports found"); // Use specific exception
+            throw new ResourceNotFoundException("No reports found");
+// Use specific exception
         }
         return reports.stream()
                 .map(this::mapToDto)
@@ -108,6 +107,7 @@ public class ReportService {
                 .examId(report.getExamId())
                 .userId(report.getUserId())
                 .totalMarks(report.getTotalMarks())
+             
                 .performanceMetrics(report.getPerformanceMetrics())
                 .build();
     }
@@ -119,7 +119,8 @@ public class ReportService {
                 reportRepository.delete(report.get());
                 return true;
             } else {
-                throw new ResourceNotFoundException("No report found for the given userId and examId."); // Use specific exception
+                throw new ResourceNotFoundException("No report found for the given userId and examId.");
+// Use specific exception
             }
         } else if (userId != null) {
             List<Report> reports = reportRepository.findByUserId(userId);
@@ -127,7 +128,8 @@ public class ReportService {
                 reportRepository.deleteAll(reports);
                 return true;
             } else {
-                throw new ResourceNotFoundException("No reports found for the given userId."); // Use specific exception
+                throw new ResourceNotFoundException("No reports found for the given userId.");
+// Use specific exception
             }
         } else if (examId != null) {
             List<Report> reports = reportRepository.findByExamId(examId);
@@ -135,7 +137,8 @@ public class ReportService {
                 reportRepository.deleteAll(reports);
                 return true;
             } else {
-                throw new ResourceNotFoundException("No reports found for the given examId."); // Use specific exception
+                throw new ResourceNotFoundException("No reports found for the given examId.");
+// Use specific exception
             }
         } else {
             throw new IllegalArgumentException("At least one of userId or examId must be provided.");
@@ -145,14 +148,14 @@ public class ReportService {
     public void deleteAllReports() {
         List<Report> reports = reportRepository.findAll();
         if (reports.isEmpty()) {
-            throw new ResourceNotFoundException("No reports found to delete."); // Use specific exception
+            throw new ResourceNotFoundException("No reports found to delete.");
+// Use specific exception
         }
         reportRepository.deleteAll(reports);
     }
 
     public ResponseEntity<ReportSummaryDTO> returnTopper() {
         List<Report> result = reportRepository.findTopperByTotalMarks();
-
         if (!result.isEmpty()) {
             Report report = result.get(0);
             ReportSummaryDTO dto = ReportSummaryDTO.builder()
@@ -162,11 +165,10 @@ public class ReportService {
                     .totalMarks(report.getTotalMarks())
                     .performanceMetrics(report.getPerformanceMetrics())
                     .build();
-
             return ResponseEntity.ok(dto);
+        } else {
+            throw new ResourceNotFoundException("No records found to determine the topper.");
         }
-
-        return ResponseEntity.notFound().build();
     }
 
     public int returnRank(Integer userId) {
@@ -179,6 +181,15 @@ public class ReportService {
                 }
             }
         }
-        throw new ResourceNotFoundException("No reports found for the given userId to determine rank."); // Use specific exception
+        throw new ResourceNotFoundException("No reports found for the given userId to determine rank.");
+// Use specific exception
+    }
+
+    public long countExamsByUserId(Integer userId) {
+        long count = reportRepository.countDistinctExamIdsByUserId(userId);
+        if (count == 0) {
+            throw new ResourceNotFoundException("No exams found for user ID: " + userId);
+        }
+        return count;
     }
 }

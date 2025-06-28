@@ -13,10 +13,13 @@ public interface ReportRepository extends JpaRepository<Report, Integer> {
 
 	@Query("SELECT r FROM Report r WHERE r.totalMarks = (SELECT MAX(r2.totalMarks) FROM Report r2)")
 	List<Report> findTopperByTotalMarks();
-
-	List<Report> findByExamId(Integer examId);
+	
+    List<Report> findByExamId(Integer examId);
 
 	List<Report> findByUserId(Integer userId);
 
 	Optional<Report> findByUserIdAndExamId(Integer userId, Integer examId);
+
+    @Query("SELECT COUNT(DISTINCT r.examId) FROM Report r WHERE r.userId = :userId")
+    long countDistinctExamIdsByUserId(Integer userId);
 }
