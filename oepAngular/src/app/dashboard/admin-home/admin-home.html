@@ -1,0 +1,40 @@
+<mat-toolbar color="primary">
+  <span class="logo">Exam Portal - Admin</span>
+  <span class="spacer"></span>
+  <button mat-button routerLink="/admin-home">Home</button>
+  <button mat-button (click)="goToManageExams()">Manage Exams</button>
+  <button mat-button (click)="goToManageQuestions()">Manage Questions</button>
+  <button mat-button (click)="goToReports()">View Reports</button>
+</mat-toolbar>
+
+<div class="home-container">
+  <h2>Welcome, Admin!</h2>
+
+  <div class="card-container">
+    <mat-card class="admin-card" (click)="goToManageExams()">
+      <mat-card-title>Manage Exams</mat-card-title>
+      <mat-card-content>
+        Create, update and delete exams.
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="admin-card" (click)="goToManageQuestions()">
+      <mat-card-title>Manage Questions</mat-card-title>
+      <mat-card-content>
+        Organize and import questions.
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="admin-card" (click)="goToReports()">
+      <mat-card-title>View Reports</mat-card-title>
+      <mat-card-content>
+        Analyze student and exam performance.
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="admin-card" (click)="goToManageUsers()">
+    <mat-icon>group</mat-icon>
+    <p>Manage Users</p>
+  </mat-card>
+  </div>
+</div>

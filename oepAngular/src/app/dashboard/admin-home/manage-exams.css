@@ -1,0 +1,18 @@
+.container {
+  padding: 24px;
+}
+
+.exam-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.exam-card {
+  width: 300px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

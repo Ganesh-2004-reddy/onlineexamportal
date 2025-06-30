@@ -1,0 +1,8 @@
+mat-form-field {
+  min-width: 200px;
+}
+
+mat-selection-list {
+  max-height: 300px;
+  overflow: auto;
+}

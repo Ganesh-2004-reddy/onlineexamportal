@@ -1,0 +1,32 @@
+<mat-toolbar color="primary">
+  <span>Manage Questions</span>
+  <span class="spacer"></span>
+  <button mat-button [routerLink]="['/admin-home']">Back to Dashboard</button>
+</mat-toolbar>
+
+<div class="container">
+  <button mat-raised-button color="primary" (click)="addQuestion()">+ Add New Question</button>
+  <button mat-raised-button color="accent" (click)="importQuestions()">Import from Question Bank</button>
+  <div class="question-list">
+    <mat-card *ngFor="let q of questions" class="question-card">
+      <mat-card-title>{{ q.text }}</mat-card-title>
+      <mat-card-content>
+        <p><strong>Category:</strong> {{ q.category }}</p>
+        <p><strong>Difficulty:</strong> {{ q.difficulty }}</p>
+        <p><strong>Correct Answer:</strong> {{ q.correctAnswer }}</p>
+        <p>
+          <strong>Options:</strong>
+          <ng-container *ngIf="q.options?.length; else noOptions">
+            {{ q.options }}
+          </ng-container>
+          <ng-template #noOptions>None</ng-template>
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="accent" (click)="editQuestion(q.questionId)">Edit</button>
+        <button mat-button color="warn" (click)="deleteQuestion(q.questionId)">Delete</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  
+</div>

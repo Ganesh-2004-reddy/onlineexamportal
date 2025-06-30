@@ -1,0 +1,58 @@
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.result-container {
+  padding: 30px;
+  text-align: center;
+}
+
+.full-width-table {
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+table {
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+
+mat-card {
+  margin-top: 20px;
+  padding: 20px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer {
+  margin-top: 60px;
+  justify-content: center;
+  text-align: center;
+}

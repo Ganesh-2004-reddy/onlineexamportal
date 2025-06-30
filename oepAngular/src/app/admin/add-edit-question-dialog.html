@@ -1,0 +1,42 @@
+<h2>{{ data?.question ? 'Edit Question' : 'Add New Question' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Question Text</mat-label>
+    <input matInput formControlName="text">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Category</mat-label>
+    <input matInput formControlName="category">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Difficulty</mat-label>
+    <mat-select formControlName="difficulty">
+      <mat-option value="Easy">Easy</mat-option>
+      <mat-option value="Medium">Medium</mat-option>
+      <mat-option value="Hard">Hard</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Correct Answer</mat-label>
+    <input matInput formControlName="correctAnswer">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Option 1</mat-label>
+    <input matInput formControlName="option1">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Option 2</mat-label>
+    <input matInput formControlName="option2">
+  </mat-form-field>
+
+  <div style="display: flex; justify-content: end; gap: 10px;">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit">Save</button>
+  </div>
+</form>

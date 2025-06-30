@@ -1,0 +1,32 @@
+<mat-toolbar color="primary">Exam Attempt</mat-toolbar>
+
+<!-- Show loading message -->
+<div *ngIf="isLoading">Loading Questions...</div>
+
+<!-- Show exam details and questions -->
+<div *ngIf="!isLoading">
+  <!-- Exam Details Section -->
+  <div class="exam-details">
+    <h2>{{ examDetails.title }}</h2>
+    <p>{{ examDetails.description }}</p>
+    <p><strong>Duration:</strong> {{ examDetails.duration }} minutes</p>
+    <p><strong>Total Marks:</strong> {{ examDetails.totalMarks }}</p>
+    <p><strong>Time Left:</strong> {{ formatTime() }}</p>
+  </div>
+
+  <!-- Questions Form -->
+  <form>
+    <div *ngFor="let q of questions">
+      <mat-card class="question-card">
+        <mat-card-title>{{ q.text }}</mat-card-title>
+        <mat-radio-group [(ngModel)]="answers[q.questionId]" name="question-{{q.questionId}}">
+          <mat-radio-button [value]="q.option1">{{ q.option1 }}</mat-radio-button><br />
+          <mat-radio-button [value]="q.option2">{{ q.option2 }}</mat-radio-button>
+        </mat-radio-group>
+      </mat-card>
+    </div>
+  </form>
+
+  <!-- Submit Button -->
+  <button mat-raised-button color="accent" (click)="submitExam()">Submit Exam</button>
+</div>

@@ -1,0 +1,18 @@
+<mat-toolbar color="primary" class="toolbar">
+  <span class="title">Online Exam Portal</span>
+  <span class="spacer"></span>
+  <a mat-button routerLink="/student-home">Home</a>
+  <a mat-button routerLink="/exams">Exams</a>
+  <a mat-button routerLink="/results">Results</a>
+
+  <button mat-icon-button [matMenuTriggerFor]="profileMenu">
+    <img src="https://i.pravatar.cc/30" alt="User" class="avatar" />
+  </button>
+</mat-toolbar>
+
+<mat-menu #profileMenu="matMenu">
+  <button mat-menu-item disabled>Name: {{ user?.name }}</button>
+  <button mat-menu-item disabled>Email: {{ user?.email }}</button>
+  <button mat-menu-item (click)="openUpdateProfileDialog()">Update Profile</button>
+  <button mat-menu-item (click)="logout()">Logout</button>
+</mat-menu>

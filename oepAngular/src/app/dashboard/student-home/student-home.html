@@ -1,0 +1,14 @@
+
+<app-user-header></app-user-header>
+
+<div class="welcome-container">
+  <h1>Welcome, {{ user?.name || 'Student' }}!</h1>
+  <p>Ready to test your knowledge?</p>
+
+  <div class="button-group">
+    <button mat-raised-button color="primary" [routerLink]="['/exams']">📝 Go to Exams</button>
+    <button mat-raised-button color="accent" [routerLink]="['/reports']">📊 View Results</button>
+  </div>
+</div>
+
+<app-footer></app-footer>

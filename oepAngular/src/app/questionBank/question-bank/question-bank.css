@@ -1,0 +1,25 @@
+.container {
+  padding: 20px;
+}
+
+.filters {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.actions {
+  margin-bottom: 20px;
+}
+
+.question-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.question-card {
+  padding: 10px;
+}

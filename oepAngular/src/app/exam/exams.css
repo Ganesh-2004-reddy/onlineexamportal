@@ -1,0 +1,58 @@
+.exam-card {
+  margin: 20px;
+}
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.content {
+  padding: 20px;
+}
+
+.exam-card {
+  margin-bottom: 20px;
+}
+
+.footer {
+  margin-top: 40px;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+}
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.exam-card {
+  margin-bottom: 20px;
+}
+
+.attempted {
+  color: red;
+  font-weight: bold;
+}
+
+.not-attempted {
+  color: green;
+  font-weight: bold;
+}
