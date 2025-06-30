@@ -22,7 +22,7 @@ public interface UserFeignClient {
      * @param id The ID of the user.
      * @return ResponseEntity containing UserResponseDTO if found.
      */
-    @GetMapping("/examProtal/userModule/{id}/profile") // Ensure this path matches the User Service's UserController
+    @GetMapping("/user/{id}/profile") // Ensure this path matches the User Service's UserController
     ResponseEntity<UserDTO> getUserProfile(@PathVariable("id") Integer id);
     
 

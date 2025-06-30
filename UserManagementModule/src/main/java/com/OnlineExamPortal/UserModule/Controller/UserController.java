@@ -26,7 +26,7 @@ import java.util.Optional;
  */
 
 @RestController // Marks this class as a Spring REST Controller
-@RequestMapping("/examProtal/userModule") // Base path for all endpoints in this controller
+@RequestMapping("/user") // Base path for all endpoints in this controller
 public class UserController {
 	@Autowired
     private UserService userService;
@@ -91,7 +91,7 @@ public class UserController {
      * @return ResponseEntity with the updated user's details and 200 OK status.
      */
     
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     //@PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Integer id, @RequestBody @Valid UserRegistrationDTO dto) {
         UserDTO updatedUser = userService.updateUser(id, dto);
@@ -108,8 +108,8 @@ public class UserController {
      */
     
     @PutMapping("/{id}/role")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> assignRoleToUser(@PathVariable Integer id, @RequestParam Role role) {
+    //@PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> assignRoleToUser(@PathVariable Integer id, @RequestParam Role role) {
         userService.assignRole(id, role);
         return ResponseEntity.ok().build();   
     }

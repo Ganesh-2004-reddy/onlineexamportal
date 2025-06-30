@@ -179,9 +179,9 @@ public class ExamQuestionMappingService {
 
     public ExamQuestionMappingDTO convertToDTO(ExamQuestionMapping eqm) {
 		return new ExamQuestionMappingDTO(
+				eqm.getId(),
 				eqm.getExamId(),
-				eqm.getQuestionId()
-			
+				eqm.getQuestionId()			
 			);
     }
 

@@ -13,8 +13,8 @@ public interface ReportRepository extends JpaRepository<Report, Integer> {
 
 	@Query("SELECT r FROM Report r WHERE r.totalMarks = (SELECT MAX(r2.totalMarks) FROM Report r2)")
 	List<Report> findTopperByTotalMarks();
-	
-    List<Report> findByExamId(Integer examId);
+
+	List<Report> findByExamId(Integer examId);
 
 	List<Report> findByUserId(Integer userId);
 
@@ -22,4 +22,17 @@ public interface ReportRepository extends JpaRepository<Report, Integer> {
 
     @Query("SELECT COUNT(DISTINCT r.examId) FROM Report r WHERE r.userId = :userId")
     long countDistinctExamIdsByUserId(Integer userId);
+
+    /**
+     * Retrieves a list of distinct user IDs and their maximum total marks,
+     * ordered by total marks in descending order. This is used for ranking.
+     * The results are mapped to the {@link UserMaxMarksProjection} interface.
+     *
+     * @return A list of {@link UserMaxMarksProjection} containing user IDs and their highest scores.
+     */
+    @Query("SELECT r.userId AS userId, MAX(r.totalMarks) AS maxMarks " +
+           "FROM Report r " +
+           "GROUP BY r.userId " +
+           "ORDER BY MAX(r.totalMarks) DESC")
+    List<UserMaxMarksProjection> findUserMaxMarksOrderedByTotalMarksDesc();
 }

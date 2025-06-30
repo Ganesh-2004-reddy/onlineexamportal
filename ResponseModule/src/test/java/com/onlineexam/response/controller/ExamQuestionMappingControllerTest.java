@@ -31,7 +31,7 @@ public class ExamQuestionMappingControllerTest {
 
     @Test
     public void testMapQuestionToExam_Success() throws Exception {
-        ExamQuestionMappingDTO mockDto = new ExamQuestionMappingDTO(1, 1); // examId = 1, questionId = 1
+        ExamQuestionMappingDTO mockDto = new ExamQuestionMappingDTO(1, 1,1); // examId = 1, questionId = 1
         when(mappingService.saveMapping(1, 1)).thenReturn(mockDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/exam-management/mappings/exams/1/questions/1"))
@@ -44,8 +44,8 @@ public class ExamQuestionMappingControllerTest {
     @Test
     public void testGetAllMappings() throws Exception {
         List<ExamQuestionMappingDTO> mockList = Arrays.asList(
-                new ExamQuestionMappingDTO( 1, 1),
-                new ExamQuestionMappingDTO( 1, 2)
+                new ExamQuestionMappingDTO( 1, 1,1),
+                new ExamQuestionMappingDTO( 1, 2,3)
         );
         when(mappingService.getAllMappings()).thenReturn(mockList);
         

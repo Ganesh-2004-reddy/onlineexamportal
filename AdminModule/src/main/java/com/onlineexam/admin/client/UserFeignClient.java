@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * The 'url' property points directly to the User Service's base URL.
  * 'configuration' refers to a class that can provide custom configurations (e.g., token interceptors).
  */
-@FeignClient(name = "user-service", url = "${user-service.url}", configuration = UserFeignClientConfig.class)
+@FeignClient(name = "user-service", url = "${user-service.url}")
 public interface UserFeignClient {
 
     /**
@@ -26,8 +26,8 @@ public interface UserFeignClient {
      * @param role The new role to assign (e.g., "ADMIN", "STUDENT", "EXAMINER").
      * @return ResponseEntity<Void> from the User Service.
      */
-    @PutMapping("/examProtal/userModule/{id}/role")
-    ResponseEntity<Void> assignRoleToUser(@PathVariable("id") Integer id, @RequestParam("role") String role);
+    @PutMapping("/user/{id}/role")
+    ResponseEntity<String> assignRoleToUser(@PathVariable("id") Integer id, @RequestParam("role") String role);
 
     // You can add other methods here if the Admin Service needs to call other User Service endpoints, e.g.:
     // @GetMapping("/examProtal/userModule/{id}/profile")

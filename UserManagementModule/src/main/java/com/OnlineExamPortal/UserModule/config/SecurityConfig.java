@@ -1,5 +1,7 @@
 package com.OnlineExamPortal.UserModule.config; 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +18,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.OnlineExamPortal.UserModule.Service.CustomUserDetailsService;
 
 /**
@@ -32,7 +37,9 @@ public class SecurityConfig {
     private JwtAuthFilter jwtAuthFilter;
 
     @Autowired // Injects the custom UserDetailsService (our CustomUserDetailsService)
-    private UserDetailsService userDetailsService; // Assuming this is your CustomUserDetailsService now
+    private UserDetailsService userDetailsService;
+
+     
 
     /**
      * Defines the SecurityFilterChain, which configures HTTP security.
@@ -40,30 +47,57 @@ public class SecurityConfig {
      * @return A configured SecurityFilterChain.
      * @throws Exception If an error occurs during configuration.
      */
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        return http
+//        		.csrf(csrf -> csrf.disable()) // Disable CSRF protection (common for stateless REST APIs)
+//                .authorizeHttpRequests(auth -> auth
+//                        // Allow unauthenticated access to registration, login, and service token endpoints
+//                        .requestMatchers("/examProtal/userModule/register", "/examProtal/userModule/login","examProtal/userModule/{userId}/profile","api/admin/exams/{id}","/examProtal/userModule/users","/examProtal/userModule/{id}","/api/admin/exams/{id}","/api/exam-management/mappings/exam/{examId}","/examProtal/userModule/{id}/role","/api/admin/users/{id}/role","/examProtal/userModule/users","/api/exam-management/**","/user/**").permitAll()
+//                        // Allow ADMIN to view all users
+//                        .requestMatchers("qb/addQuestion","qb/addMultipleQuestions","qb/uploadFile","qb/getquestion/{id}","qb/getAll","qb/updQuestion/{id}","qb/delQuestion/{id}","qb/getByCategory/{category}","qb/getByDifficulty/{difficulty}","/api/admin/exams/update/{id}","/api/admin/exams/role/{id}").hasRole("ADMIN")
+//                        // Allow ADMIN and STUDENT to view their own profile and update
+//                        //.requestMatchers("/examProtal/userModule/{id}").hasAnyRole("ADMIN", "STUDENT")
+//       
+//                        // Require authentication for all other requests
+//                        .anyRequest().authenticated()
+//                )
+//                .sessionManagement(session -> session
+//                        // Configure session management to be stateless (no sessions will be created or used)
+//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                )
+//                .authenticationProvider(authenticationProvider()) // Set our custom authentication provider
+//                // Add the JWT authentication filter before the standard UsernamePasswordAuthenticationFilter
+//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+//                .build(); // Build the security filter chain
+//    }
+
+    
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(csrf -> csrf.disable()) // Disable CSRF protection (common for stateless REST APIs)
-                .authorizeHttpRequests(auth -> auth
-                        // Allow unauthenticated access to registration, login, and service token endpoints
-                        .requestMatchers("/examProtal/userModule/register", "/examProtal/userModule/login","examProtal/userModule/{userId}/profile","api/admin/exams/{id}","/examProtal/userModule/users","/api/admin/exams/{id}","/api/exam-management/mappings/exam/{examId}","/examProtal/userModule/{id}/role").permitAll()
-                        // Allow ADMIN to view all users
-                        .requestMatchers("/examProtal/userModule/users","qb/addQuestion","qb/addMultipleQuestions","qb/uploadFile","qb/getquestion/{id}","qb/getAll","qb/updQuestion/{id}","qb/delQuestion/{id}","qb/getByCategory/{category}","qb/getByDifficulty/{difficulty}","/api/admin/exams/update/{id}","/api/admin/exams/role/{id}","/examProtal/userModule/{id}/role","/api/admin/users/{id}/role").hasRole("ADMIN")
-                        // Allow ADMIN and STUDENT to view their own profile and update
-                        .requestMatchers("/examProtal/userModule/{id}").hasAnyRole("ADMIN", "STUDENT")
-       
-                        // Require authentication for all other requests
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session
-                        // Configure session management to be stateless (no sessions will be created or used)
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authenticationProvider(authenticationProvider()) // Set our custom authentication provider
-                // Add the JWT authentication filter before the standard UsernamePasswordAuthenticationFilter
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .build(); // Build the security filter chain
+        return http
+            .cors(cors -> cors.disable()) // ✅ Disable CORS in microservice
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/user/register",
+                    "/user/login",
+                    "/user/{userId}/profile",
+                    "/user/{id}",
+                    "/user/{id}/role",
+                    "/user/users"
+                ).permitAll()
+                .anyRequest().authenticated()
+            )
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
 
+    
+    
     /**
      * Defines the PasswordEncoder bean. Uses BCryptPasswordEncoder for strong password hashing.
      * @return An instance of BCryptPasswordEncoder.

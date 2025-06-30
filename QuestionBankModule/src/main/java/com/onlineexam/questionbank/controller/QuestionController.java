@@ -1,9 +1,12 @@
 package com.onlineexam.questionbank.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 //import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +32,7 @@ import com.onlineexam.questionbank.service.QuestionService;
 
 @RestController
 @RequestMapping("/api/questionbank")
+
 public class QuestionController {
 	
 	@Autowired
@@ -130,13 +134,21 @@ public class QuestionController {
 	 * @param id
 	 * @return ResponseEntity<String>
 	 */
+//	@DeleteMapping("/delQuestion/{id}")
+//	//@PreAuthorize("hasRole('ADMIN')")
+//	public ResponseEntity<String> deleteQuestion(@PathVariable int id)
+//	{
+//		qbService.delete(id);
+//		return ResponseEntity.ok("Deleted the question with id "+id);
+//	}
 	@DeleteMapping("/delQuestion/{id}")
-	//@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<String> deleteQuestion(@PathVariable int id)
-	{
-		qbService.delete(id);
-		return ResponseEntity.ok("Deleted the question with id "+id);
+	public ResponseEntity<Map<String, String>> deleteQuestion(@PathVariable int id) {
+	    qbService.delete(id);
+	    Map<String, String> response = new HashMap<>();
+	    response.put("message", "Deleted the question with id " + id);
+	    return ResponseEntity.ok(response);
 	}
+
 	/**
 	 * Retrieving questions based on category
 	 * @param category

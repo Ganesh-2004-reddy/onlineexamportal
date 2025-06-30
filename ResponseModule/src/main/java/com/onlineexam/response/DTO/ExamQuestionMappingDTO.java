@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExamQuestionMappingDTO {
+	private long mappingId;
 	private int examId;
 	private int questionId;
 	

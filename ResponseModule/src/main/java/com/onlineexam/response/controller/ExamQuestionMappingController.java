@@ -1,10 +1,13 @@
 package com.onlineexam.response.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -114,16 +117,20 @@ public class ExamQuestionMappingController {
      * @return ResponseEntity with 204 No Content if the deletion is successful.
      * @throws ResourceNotFoundException if the mapping ID is not found.
      */
+ 
     @DeleteMapping("/{mappingId}")
- // @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteMapping(@PathVariable Long mappingId) {
-    	boolean ans = mappingService.deleteMapping(mappingId);
-    	if (ans)
-    		return ResponseEntity.ok("The mapping has been deleted successfully");
-    	else
-    		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                              .body("Mapping with ID " + mappingId + " not found. Deletion failed.");
- }
+    public ResponseEntity<Map<String, String>> deleteMapping(@PathVariable Long mappingId) {
+        boolean success = mappingService.deleteMapping(mappingId);
+        Map<String, String> response = new HashMap<>();
+
+        if (success) {
+            response.put("message", "Mapping deleted successfully");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Mapping with ID " + mappingId + " not found. Deletion failed.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
 
     
     @DeleteMapping("/exam/{examId}")
