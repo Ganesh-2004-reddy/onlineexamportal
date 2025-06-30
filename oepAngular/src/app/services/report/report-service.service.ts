@@ -52,4 +52,13 @@ export class ReportService {
   deleteAllReports(): Observable<any> {
     return this.http.delete(`${this.baseUrl}/all`);
   }
+
+  createReport(userId: number, examId: number): Observable<ReportSummaryDTO> {
+    return this.http.post<ReportSummaryDTO>(`${this.baseUrl}`, null, {
+      params: {
+        userId: userId.toString(),
+        examId: examId.toString()
+      }
+    });
+  }
 }

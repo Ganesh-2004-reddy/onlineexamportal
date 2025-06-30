@@ -21,13 +21,13 @@
 </div>
 
 <mat-selection-list>
-  <mat-list-option *ngFor="let q of filteredQuestions" [disabled]="isMapped(q.questionId)">
-    <mat-checkbox
-      [checked]="selectedQuestions.includes(q.questionId)"
-      (change)="toggleSelection(q.questionId)"
-    >
-      {{ q.text }} ({{ q.category }} | {{ q.difficulty }})
-    </mat-checkbox>
+  <mat-list-option
+    *ngFor="let q of filteredQuestions"
+    [disabled]="isMapped(q.questionId)"
+    [selected]="selectedQuestions.includes(q.questionId)"
+    (click)="toggleSelection(q.questionId)"
+  >
+    {{ q.text }} ({{ q.category }} | {{ q.difficulty }})
   </mat-list-option>
 </mat-selection-list>
 

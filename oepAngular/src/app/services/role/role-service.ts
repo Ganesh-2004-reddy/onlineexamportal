@@ -8,7 +8,7 @@
 //   constructor() { }
 // }
 
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -21,14 +21,19 @@ export class RoleService {
 
   constructor(private http: HttpClient) {}
 
+  // Fetch all users
   getUsers(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl2}/users`);
   }
 
+  // Update user role
   updateUserRole(userId: number, newRole: string): Observable<void> {
-    const params = new HttpParams().set('role', newRole);
-    return this.http.put<void>(`${this.baseUrl}/admin/users/${userId}/role`, null, { params });
+    return this.http.put<void>(`${this.baseUrl}/admin/users/${userId}/role?role=${newRole}`, null);
   }
-  
-}  
+
+  // Delete user
+  deleteUser(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/admin/users/${userId}`);
+  }
+}
 
