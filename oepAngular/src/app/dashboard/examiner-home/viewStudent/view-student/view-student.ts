@@ -27,7 +27,7 @@ export class ViewStudentsComponent implements OnInit {
   }
     loadUsers() {
     this.roleService.getUsers().subscribe({
-      next: data => this.users = data,
+      next: data => this.users = data.filter(user => user.role === 'STUDENT'),
       error: err => alert('Failed to load users: ' + err.message)
     });
   }
