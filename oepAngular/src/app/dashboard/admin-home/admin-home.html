@@ -1,17 +1,10 @@
-<mat-toolbar color="primary">
-  <span class="logo">Exam Portal - Admin</span>
-  <span class="spacer"></span>
-  <button mat-button routerLink="/admin-home">Home</button>
-  <button mat-button (click)="goToManageExams()">Manage Exams</button>
-  <button mat-button (click)="goToManageQuestions()">Manage Questions</button>
-  <button mat-button (click)="goToReports()">View Reports</button>
-</mat-toolbar>
-
+<app-admin-header></app-admin-header>
 <div class="home-container">
-  <h2>Welcome, Admin!</h2>
+  <h2>Welcome to Teckathon, Admin!</h2>
 
   <div class="card-container">
     <mat-card class="admin-card" (click)="goToManageExams()">
+      <mat-icon>assignment</mat-icon>
       <mat-card-title>Manage Exams</mat-card-title>
       <mat-card-content>
         Create, update and delete exams.
@@ -19,6 +12,7 @@
     </mat-card>
 
     <mat-card class="admin-card" (click)="goToManageQuestions()">
+      <mat-icon>help_outline</mat-icon>
       <mat-card-title>Manage Questions</mat-card-title>
       <mat-card-content>
         Organize and import questions.
@@ -26,6 +20,7 @@
     </mat-card>
 
     <mat-card class="admin-card" (click)="goToReports()">
+      <mat-icon>bar_chart</mat-icon>
       <mat-card-title>View Reports</mat-card-title>
       <mat-card-content>
         Analyze student and exam performance.
@@ -33,8 +28,13 @@
     </mat-card>
 
     <mat-card class="admin-card" (click)="goToManageUsers()">
-    <mat-icon>group</mat-icon>
-    <p>Manage Users</p>
+      <mat-icon>group</mat-icon>
+    <mat-card-title>Manage Users</mat-card-title>
+<mat-card-content>
+Add, update, and remove users.
+</mat-card-content>
+  
   </mat-card>
   </div>
 </div>
+<app-footer></app-footer>

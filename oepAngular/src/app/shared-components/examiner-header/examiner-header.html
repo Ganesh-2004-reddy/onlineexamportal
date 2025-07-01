@@ -1,0 +1,23 @@
+<mat-toolbar color="primary" class="toolbar">
+  <div class="header">
+    <img src="/OIP.png" alt="Logo" class="logo-image">   
+    <h1 class="logo">Teckathon</h1>
+    <span class="spacer"></span>
+    </div>
+  <div class="nav-buttons"> 
+  <a mat-button routerLink="">View Students</a>
+  <a mat-button routerLink="">View Exams</a>
+  <a mat-button routerLink="">View Reports</a>
+</div> 
+
+  <button mat-icon-button [matMenuTriggerFor]="profileMenu">
+    <img src="/User-Profile.png" alt="User" class="avatar" />
+  </button>
+</mat-toolbar>
+
+<mat-menu #profileMenu="matMenu">
+  <button mat-menu-item disabled>Name: {{ user?.name }}</button>
+  <button mat-menu-item disabled>Email: {{ user?.email }}</button>
+  <button mat-menu-item (click)="openUpdateProfileDialog()">Update Profile</button>
+  <button mat-menu-item (click)="logout()">Logout</button>
+</mat-menu>

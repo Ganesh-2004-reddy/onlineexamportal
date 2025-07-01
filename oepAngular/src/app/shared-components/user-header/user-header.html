@@ -1,9 +1,14 @@
 <mat-toolbar color="primary" class="toolbar">
-  <span class="title">Online Exam Portal</span>
-  <span class="spacer"></span>
+  <div class="header">
+    <img src="/OIP.png" alt="Logo" class="logo-image">   
+    <h1 class="logo">Teckathon</h1>
+    <span class="spacer"></span>
+    </div>
+  <div class="nav-buttons"> 
   <a mat-button routerLink="/student-home">Home</a>
   <a mat-button routerLink="/exams">Exams</a>
   <a mat-button routerLink="/results">Results</a>
+</div> 
 
   <button mat-icon-button [matMenuTriggerFor]="profileMenu">
     <img src="https://i.pravatar.cc/30" alt="User" class="avatar" />

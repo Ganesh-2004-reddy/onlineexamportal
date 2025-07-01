@@ -10,6 +10,8 @@ import { Mapping,QuestionService, Question } from '../services/question/question
 import { ImportQuestionDialogComponent } from '../admin/import-question-dialog';
 import { AddEditQuestionDialogComponent } from '../admin/add-edit-question-dialog';
 import { RouterModule } from '@angular/router';
+import { AdminHeader } from '../shared-components/admin-header/admin-header';
+import { FooterComponent } from '../shared-components/footer/footer';
 
 @Component({
   selector: 'app-manage-questions',
@@ -21,7 +23,9 @@ import { RouterModule } from '@angular/router';
     MatCardTitle,
     MatCardActions,
     CommonModule,
-    RouterModule
+    RouterModule,
+    AdminHeader,
+    FooterComponent,
   ],
   templateUrl: './manage-questions.html',
   styleUrls: ['./manage-questions.css']

@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +8,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { ExamDialogComponent } from '../../admin/exam-dialog';
 import { ExamService, Exam } from '../../services/exam-service';
+import { AdminHeader } from '../../shared-components/admin-header/admin-header';
+import { FooterComponent } from '../../shared-components/footer/footer';
 
 
 @Component({
@@ -23,8 +23,9 @@ import { ExamService, Exam } from '../../services/exam-service';
     MatDialogModule,
     MatToolbarModule,
     RouterModule,
-    ExamDialogComponent
-  ],
+    AdminHeader,
+    FooterComponent
+],
   templateUrl: './manage-exams.html',
   styleUrls: ['./manage-exams.css']
 })

@@ -1,9 +1,4 @@
-<mat-toolbar color="primary">
-  <span>Manage Exams</span>
-  <span class="spacer"></span>
-  <button mat-button routerLink="/admin-home">Back to Dashboard</button>
-</mat-toolbar>
-
+<app-admin-header></app-admin-header>
 <div class="container">
   <button mat-raised-button color="primary" (click)="createExam()">+ Create New Exam</button>
 
@@ -25,3 +20,4 @@
     </mat-card>
   </div>
 </div>
+<app-footer></app-footer>

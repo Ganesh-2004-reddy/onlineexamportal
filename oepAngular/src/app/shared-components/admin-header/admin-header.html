@@ -1,1 +1,13 @@
-<p>admin-header works!</p>
+<mat-toolbar color="primary">
+    <div class="header">
+    <img src="OIP.png" alt="Logo" class="logo-image">   
+    <h1 class="logo">Teckathon</h1>
+    <span class="spacer"></span>
+    </div>
+    <div class="nav-buttons">
+    <button mat-button routerLink="/admin-home">Home</button>
+    <button mat-button (click)="goToManageExams()">Manage Exams</button>
+    <button mat-button (click)="goToManageQuestions()">Manage Questions</button>
+    <button mat-button (click)="goToReports()">View Reports</button>
+    </div>
+  </mat-toolbar>

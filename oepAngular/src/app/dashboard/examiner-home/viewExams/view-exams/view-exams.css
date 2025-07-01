@@ -1,0 +1,29 @@
+.exam-card {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+  transition: box-shadow 0.3s ease;
+}
+
+.exam-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+mat-card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+mat-card-content p {
+  font-size: 1rem;
+  color: #555;
+  margin: 0.5rem 0;
+}
+
+mat-card-content strong {
+  color: #333;
+}

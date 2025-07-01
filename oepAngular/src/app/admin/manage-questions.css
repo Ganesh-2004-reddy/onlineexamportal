@@ -11,8 +11,35 @@
 
 .question-card {
   width: 350px;
+  border-radius: 5px;
 }
 
 .spacer {
   flex: 1 1 auto;
 }
+button[mat-raised-button] {
+  margin-right: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 10px;
+  color: blue;
+  font-weight: 500; 
+  background-color: transparent;
+  border: none;
+}
+
+button{
+  border-radius: 9px;
+}
+button:hover{
+  background-color: rgba(30, 143, 255, 0.685);
+  color: rgb(240, 239, 239);
+  transition: 0.3s;
+}
+
+mat-card-title{
+  background-color: white;
+  border-radius: 5px;
+  padding: 5px
+}
+
