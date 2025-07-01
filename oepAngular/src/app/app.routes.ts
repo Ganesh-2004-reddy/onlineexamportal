@@ -12,7 +12,7 @@ import { ManageQuestionsComponent } from './admin/manage-questions';
 import { ManageUsersComponent } from './admin/manage-users';
 import { QuestionBankComponent } from './questionBank/question-bank/question-bank';
 import { AuthGuard } from './guards/auth-guard';
-import { AdminReportsComponent } from './admin-report/report/report';
+import { AdminReportComponent } from './admin-report/report/report';
 import { StudentReportsComponent } from './student-report/report/report';
 import { landingPageComponent } from './landing-page/landing-page';
 import { ExaminerHome } from './dashboard/examiner-home/examiner-home/examiner-home';
@@ -44,7 +44,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'admin/reports',
-    component: AdminReportsComponent,
+    component: AdminReportComponent,
     canActivate: [AuthGuard],
     data: { role: 'ADMIN' }
   },
