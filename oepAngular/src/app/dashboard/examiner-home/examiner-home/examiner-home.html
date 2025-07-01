@@ -1,16 +1,24 @@
 <app-examiner-header></app-examiner-header>
 
 <div class="home-container">
-    <h1>Welcome to Teckathon, {{ user?.name || 'Student' }}!</h1>
-    <div class="view-student container">
-    <app-view-students></app-view-students>
-    </div>
-    <div class="view-exam container">
-    <app-view-exams></app-view-exams>
-    </div>
-    <div class="view-report container">
-    <app-view-report></app-view-report>
-    </div>
+    <h1>Welcome to Teckathon, Examiner {{ user?.name || 'Student' }}!</h1>
+
+    <div class="card-container">
+        <mat-card class="admin-card" [routerLink]="['/examiner/students']" >
+          <mat-icon>assignment</mat-icon>
+          <mat-card-title>View Exams</mat-card-title>
+        </mat-card>
+    
+        <mat-card class="admin-card" [routerLink]="['/examiner/reports']" >
+          <mat-icon>help_outline</mat-icon>
+          <mat-card-title>View Reports</mat-card-title>
+        </mat-card>
+    
+        <mat-card class="admin-card" [routerLink]="['/examiner/students']" >
+          <mat-icon>bar_chart</mat-icon>
+          <mat-card-title>View Students</mat-card-title>
+        </mat-card>
+      </div>
 </div>
 
 <app-footer></app-footer>

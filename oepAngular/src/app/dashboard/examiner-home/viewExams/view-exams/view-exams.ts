@@ -3,13 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { ExamService,Exam } from '../../../../services/exam-service';
-
+import { ExaminerHeaderComponent } from '../../../../shared-components/examiner-header/examiner-header';
+import { FooterComponent } from '../../../../shared-components/footer/footer';
 
 
 @Component({
   selector: 'app-view-exams',
   standalone: true,
-  imports: [CommonModule, MatCardModule],
+  imports: [CommonModule, MatCardModule,ExaminerHeaderComponent,FooterComponent],
   templateUrl: './view-exams.html',
   styleUrls: ['./view-exams.css']
 })

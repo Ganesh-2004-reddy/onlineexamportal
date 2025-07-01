@@ -5,11 +5,12 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { RoleService } from '../../../../services/role/role-service';
 import { UserProfile } from '../../../../services/user-service';
-
+import { ExaminerHeaderComponent } from '../../../../shared-components/examiner-header/examiner-header';
+import { FooterComponent } from '../../../../shared-components/footer/footer';
 @Component({
   selector: 'app-view-students',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatCardModule],
+  imports: [CommonModule, MatTableModule, MatCardModule,ExaminerHeaderComponent,FooterComponent],
   templateUrl: './view-student.html',
   styleUrls: ['./view-student.css']
 })
