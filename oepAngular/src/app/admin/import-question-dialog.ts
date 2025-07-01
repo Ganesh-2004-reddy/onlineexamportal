@@ -83,7 +83,7 @@ export class ImportQuestionDialogComponent {
 
   filteredQuestions: Question[] = [];
   categories: string[] = [];
-  difficulties: string[] = ['Easy', 'Medium', 'Hard'];
+  difficulties: string[] = ['easy', 'medium', 'hard'];
   selectedCategory = '';
   selectedDifficulty = '';
 

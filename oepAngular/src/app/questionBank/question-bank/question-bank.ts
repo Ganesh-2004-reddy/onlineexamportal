@@ -1,14 +1,3 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-question-bank',
-//   imports: [],
-//   templateUrl: './question-bank.html',
-//   styleUrl: './question-bank.css'
-// })
-// export class QuestionBank {
-
-// }
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -52,7 +41,7 @@ export class QuestionBankComponent implements OnInit {
   filteredQuestions: Question[] = [];
 
   categories: string[] = [];
-  difficulties: string[] = ['Easy', 'Medium', 'Hard'];
+  difficulties: string[] = ['easy', 'medium', 'hard'];
 
   selectedCategory: string = '';
   selectedDifficulty: string = '';

@@ -1,20 +1,37 @@
-<div class="container">
-  <mat-card>
-    <h2>Login</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" required />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input matInput formControlName="password" type="password" required />
-      </mat-form-field>
-
-      <button mat-raised-button color="primary" type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a routerLink="/register">Register here</a></p>
-  </mat-card>
+<div class="split-container">
+  <div class="image-half">
+    <div class="image-overlay">
+      <h1>Ace Your Exams!</h1>
+      <p>Your gateway to a brighter future.</p>
+    </div>
+  </div>
+ 
+  <div class="login-half">
+    <mat-card>
+      <h2>Login</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" required />
+          <mat-error *ngIf="loginForm.controls['email'].hasError('required') && loginForm.controls['email'].touched">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="loginForm.controls['email'].hasError('email') && loginForm.controls['email'].touched">
+            Please enter a valid email
+          </mat-error>
+        </mat-form-field>
+ 
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" required />
+          <mat-error *ngIf="loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched">
+            Password is required
+          </mat-error>
+        </mat-form-field>
+ 
+        <button mat-raised-button color="primary" type="submit">Login</button>
+      </form>
+      <p class="register-link">Don't have an account? <a routerLink="/register">Register here</a></p>
+    </mat-card>
+  </div>
 </div>
-

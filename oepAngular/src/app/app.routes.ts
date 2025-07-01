@@ -14,9 +14,11 @@ import { QuestionBankComponent } from './questionBank/question-bank/question-ban
 import { AuthGuard } from './guards/auth-guard';
 import { AdminReportsComponent } from './admin-report/report/report';
 import { StudentReportsComponent } from './student-report/report/report';
+import { landingPageComponent } from './landing-page/landing-page';
 
 export const appRoutes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'landing-page', pathMatch: 'full' },
+  { path: 'landing-page',component: landingPageComponent},
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   {
