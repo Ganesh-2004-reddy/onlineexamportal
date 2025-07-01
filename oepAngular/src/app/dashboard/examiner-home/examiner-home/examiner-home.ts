@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatCardActions } from '@angular/material/card';
+import { MatCardTitle } from '@angular/material/card';
 import { AuthService } from '../../../services/auth';
 import { UserProfile } from '../../../services/user-service';
 import { FooterComponent } from '../../../shared-components/footer/footer';
@@ -11,7 +16,7 @@ import { ViewStudentsComponent } from '../viewStudent/view-student/view-student'
 import { ViewReportComponent } from '../viewReports/view-report/view-report';
 @Component({
   selector: 'app-examiner-home',
-  imports: [CommonModule, RouterModule, MatButtonModule,ExaminerHeaderComponent, FooterComponent,ViewExamsComponent, ViewStudentsComponent, ViewReportComponent],
+  imports: [CommonModule, RouterModule, MatButtonModule,ExaminerHeaderComponent, FooterComponent,ViewExamsComponent, ViewStudentsComponent, ViewReportComponent,MatCardTitle, MatCard, MatCardActions, RouterLink],
   templateUrl: './examiner-home.html',
   styleUrl: './examiner-home.css'
 })
