@@ -115,7 +115,7 @@ export class ImportQuestionDialogComponent {
     this.filteredQuestions = this.questionBank.filter(q => {
       return (
         (!this.selectedCategory || q.category === this.selectedCategory) &&
-        (!this.selectedDifficulty || q.difficulty === this.selectedDifficulty)
+        (!this.selectedDifficulty || q.difficulty.toLocaleLowerCase() === this.selectedDifficulty.toLocaleLowerCase())
       );
     });
   }

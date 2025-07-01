@@ -16,10 +16,11 @@ public class Report {
     private Integer reportId;
 
     private Integer examId; // Referencing a minimal Exam entity in this service
-
-   
+    private String examTitle; // Added examTitle
     private Integer userId; // Referencing a minimal User entity in this service
+    private String username; // Added username field
+    private Integer maxMarks; // Added maxMarks field from exam
 
-    private Integer totalMarks;
+    private Integer marksObtained; // Changed from totalMarks to marksObtained
     private String performanceMetrics;
 }

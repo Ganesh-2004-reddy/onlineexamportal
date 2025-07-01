@@ -97,7 +97,9 @@ export class StudentReportsComponent implements OnInit {
     if (this.filterExamId !== null) {
       this.reportService.getReportsByUser(this.userId).subscribe(
         res => {
-          this.studentReports = res.filter(report => report.examId === this.filterExamId);
+          console.log('Filter Exam ID:', this.filterExamId);
+          console.log('Reports:', res);
+          this.studentReports = res.filter(report => this.filterExamId !== null && report.examId.toString() === this.filterExamId.toString());
           if (this.studentReports.length === 0) {
             this.snackBar.open('No reports found for the given Exam ID.', 'Close', { duration: 3000 });
           }

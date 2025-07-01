@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -25,17 +24,9 @@ public class ReportController {
     public ResponseEntity<ReportSummaryDTO> createReport(@RequestParam Integer userId, @RequestParam Integer examId) {
         // No authorizationHeader is passed here, assuming Response Service also handles its own security
         // or a gateway handles it upstream.
-        Report report = reportService.generateReport(userId, examId);
+        ReportSummaryDTO report = reportService.generateReport(userId, examId); // Changed return type to DTO
 
-        ReportSummaryDTO dto = new ReportSummaryDTO(
-                report.getReportId(),
-                report.getExamId(),
-                report.getUserId(),
-                report.getTotalMarks(),
-                report.getPerformanceMetrics()
-        );
-
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(report); // Return DTO directly
     }
 
     // Get all reports in the system
