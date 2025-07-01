@@ -1,27 +1,27 @@
 <mat-card class="top-section">
-    <div>
-      <h3>Topper</h3>
-      <div *ngIf="topper">
-        User {{topper.userId}} scored {{topper.totalMarks}} - {{topper.performanceMetrics}}
-      </div>
-    </div>
-    <div>
-      <h3>Delete Reports</h3>
-      <mat-form-field appearance="fill">
-        <mat-label>User ID</mat-label>
-        <input matInput type="number" [(ngModel)]="userIdToDelete">
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Exam ID</mat-label>
-        <input matInput type="number" [(ngModel)]="examIdToDelete">
-      </mat-form-field>
-      <button mat-button color="warn" (click)="deleteReports()">Delete Selected</button>
-      <button mat-stroked-button color="warn" (click)="deleteAll()">Delete All Reports</button>
-    </div>
-  </mat-card>
-  
-  <mat-card class="filter-section">
-    <h3>Filter Reports</h3>
+  <h3>Topper</h3>
+  <div *ngIf="topper">
+    User {{topper.username}} (ID: {{topper.userId}}) scored {{topper.marksObtained}}/{{topper.maxMarks}} - {{topper.performanceMetrics}}
+  </div>
+</mat-card>
+
+<mat-card class="delete-section">
+  <h3>Delete Reports</h3>
+  <mat-form-field appearance="fill">
+    <mat-label>User ID</mat-label>
+    <input matInput type="number" [(ngModel)]="userIdToDelete">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Exam ID</mat-label>
+    <input matInput type="number" [(ngModel)]="examIdToDelete">
+  </mat-form-field>
+  <button mat-button color="warn" (click)="deleteReports()">Delete Selected</button>
+  <button mat-stroked-button color="warn" (click)="deleteAll()">Delete All Reports</button>
+</mat-card>
+
+<mat-card class="filter-section">
+  <h3>Filter Reports</h3>
+  <div class="filter-row">
     <mat-form-field appearance="fill">
       <mat-label>Filter by User ID</mat-label>
       <input matInput type="number" [(ngModel)]="filterUserId">
@@ -30,45 +30,69 @@
       <mat-label>Filter by Exam ID</mat-label>
       <input matInput type="number" [(ngModel)]="filterExamId">
     </mat-form-field>
+  </div>
+  <div class="filter-row">
     <button mat-raised-button color="primary" (click)="applyFilters()">Apply Filters</button>
     <button mat-stroked-button color="basic" (click)="clearFilters()">Clear Filters</button>
-  </mat-card>
-  
-  <mat-card>
-    <h3>All Reports</h3>
-    <table mat-table [dataSource]="reports" class="mat-elevation-z8">
-      <!-- Report ID Column -->
-      <ng-container matColumnDef="reportId">
-        <th mat-header-cell *matHeaderCellDef>Report ID</th>
-        <td mat-cell *matCellDef="let report">{{report.reportId}}</td>
-      </ng-container>
-      <!-- User ID Column -->
-      <ng-container matColumnDef="userId">
-        <th mat-header-cell *matHeaderCellDef>User ID</th>
-        <td mat-cell *matCellDef="let report">{{report.userId}}</td>
-      </ng-container>
-      <!-- Exam ID Column -->
-      <ng-container matColumnDef="examId">
-        <th mat-header-cell *matHeaderCellDef>Exam ID</th>
-        <td mat-cell *matCellDef="let report">{{report.examId}}</td>
-      </ng-container>
-      <!-- Total Marks Column -->
-      <ng-container matColumnDef="totalMarks">
-        <th mat-header-cell *matHeaderCellDef>Total Marks</th>
-        <td mat-cell *matCellDef="let report">{{report.totalMarks}}</td>
-      </ng-container>
-      <!-- Performance Metrics Column -->
-      <ng-container matColumnDef="performanceMetrics">
-        <th mat-header-cell *matHeaderCellDef>Performance</th>
-        <td mat-cell *matCellDef="let report">{{report.performanceMetrics}}</td>
-      </ng-container>
-  
-      <!-- Table Rows -->
-      <tr mat-header-row *matHeaderRowDef="['reportId','userId','examId','totalMarks','performanceMetrics']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['reportId','userId','examId','totalMarks','performanceMetrics'];"></tr>
-    </table>
-    <div *ngIf="reports.length === 0" class="no-records-message">
-      No reports found matching the criteria.
-    </div>
-  </mat-card>
-  
+  </div>
+</mat-card>
+
+<mat-card>
+  <h3>All Reports</h3>
+  <table mat-table [dataSource]="reports" class="mat-elevation-z8">
+    <!-- Report ID Column -->
+    <ng-container matColumnDef="reportId">
+      <th mat-header-cell *matHeaderCellDef>Report ID</th>
+      <td mat-cell *matCellDef="let report">{{report.reportId}}</td>
+    </ng-container>
+
+    <!-- User ID Column -->
+    <ng-container matColumnDef="userId">
+      <th mat-header-cell *matHeaderCellDef>User ID</th>
+      <td mat-cell *matCellDef="let report">{{report.userId}}</td>
+    </ng-container>
+
+    <!-- Username Column -->
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef>Username</th>
+      <td mat-cell *matCellDef="let report">{{report.username}}</td>
+    </ng-container>
+
+    <!-- Exam ID Column -->
+    <ng-container matColumnDef="examId">
+      <th mat-header-cell *matHeaderCellDef>Exam ID</th>
+      <td mat-cell *matCellDef="let report">{{report.examId}}</td>
+    </ng-container>
+
+    <!-- Exam Title Column -->
+    <ng-container matColumnDef="examTitle">
+      <th mat-header-cell *matHeaderCellDef>Exam Title</th>
+      <td mat-cell *matCellDef="let report">{{report.examTitle}}</td>
+    </ng-container>
+
+    <!-- Marks Obtained Column -->
+    <ng-container matColumnDef="marksObtained">
+      <th mat-header-cell *matHeaderCellDef>Marks Obtained</th>
+      <td mat-cell *matCellDef="let report">{{report.marksObtained}}</td>
+    </ng-container>
+
+    <!-- Max Marks Column -->
+    <ng-container matColumnDef="maxMarks">
+      <th mat-header-cell *matHeaderCellDef>Max Marks</th>
+      <td mat-cell *matCellDef="let report">{{report.maxMarks}}</td>
+    </ng-container>
+
+    <!-- Performance Metrics Column -->
+    <ng-container matColumnDef="performanceMetrics">
+      <th mat-header-cell *matHeaderCellDef>Performance</th>
+      <td mat-cell *matCellDef="let report">{{report.performanceMetrics}}</td>
+    </ng-container>
+
+    <!-- Table Rows -->
+    <tr mat-header-row *matHeaderRowDef="['reportId', 'userId', 'username', 'examId', 'examTitle', 'marksObtained', 'maxMarks', 'performanceMetrics']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['reportId', 'userId', 'username', 'examId', 'examTitle', 'marksObtained', 'maxMarks', 'performanceMetrics'];"></tr>
+  </table>
+  <div *ngIf="reports.length === 0" class="no-records-message">
+    No reports found matching the criteria.
+  </div>
+</mat-card>

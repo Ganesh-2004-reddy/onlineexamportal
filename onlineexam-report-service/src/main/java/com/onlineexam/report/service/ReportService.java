@@ -2,8 +2,12 @@ package com.onlineexam.report.service;
 
 import com.onlineexam.report.dto.ReportSummaryDTO;
 import com.onlineexam.report.dto.ResponseSummaryDTO;
+import com.onlineexam.report.dto.ExamResponseDTO; // Import ExamResponseDTO
+import com.onlineexam.report.dto.UserDTO; // Import UserDTO
 import com.onlineexam.report.entity.Report;
 import com.onlineexam.report.feignclient.ResponseFeignClient;
+import com.onlineexam.report.feignclient.ExamFeignClient; // Import ExamFeignClient
+import com.onlineexam.report.feignclient.UserFeignClient; // Import UserFeignClient
 import com.onlineexam.report.repository.ReportRepository;
 import com.onlineexam.report.repository.UserMaxMarksProjection; // Import the new projection interface
 import com.onlineexam.report.exception.ResourceNotFoundException; // Import for consistency
@@ -28,23 +32,29 @@ public class ReportService {
     @Autowired
     private ResponseFeignClient responseFeignClient; // Autowire the Feign client
 
+    @Autowired
+    private ExamFeignClient examFeignClient; // Autowire the new Exam Feign client
+
+    @Autowired
+    private UserFeignClient userFeignClient; // Autowire the new User Feign client
+
     /**
      * Generates a report for a specific user and exam by fetching responses from the Response Microservice,
-     * calculating total marks, determining performance metrics, and saving the report.
+     * calculating marks obtained, determining performance metrics, and saving the report.
      *
      * @param userId The ID of the user.
      * @param examId The ID of the exam.
-     * @return The newly generated Report entity.
-     * @throws RuntimeException          if there's an error communicating with the Response Service.
-     * @throws ResourceNotFoundException if responses cannot be retrieved from the Response Service.
+     * @return The newly generated ReportSummaryDTO.
+     * @throws RuntimeException          if there's an error communicating with the Response Service, Exam Service, or User Service.
+     * @throws ResourceNotFoundException if responses, exam, or user cannot be retrieved.
      * @throws IllegalArgumentException  if no responses are found for the given user and exam.
      */
-    public Report generateReport(Integer userId, Integer examId) {
+    public ReportSummaryDTO generateReport(Integer userId, Integer examId) {
+        // Fetch responses
         ResponseEntity<List<ResponseSummaryDTO>> responseEntity = null;
         try {
             responseEntity = responseFeignClient.getResponsesByUserAndExam(userId, examId);
         } catch (Exception e) {
-            // Log the exception and throw a more specific one if needed
             throw new RuntimeException("Error communicating with Response Service: " + e.getMessage(), e);
         }
 
@@ -58,14 +68,54 @@ public class ReportService {
             throw new IllegalArgumentException("No responses found for user " + userId + " and exam " + examId + " from Response Service.");
         }
 
-        int totalMarks = responses.stream()
+        int marksObtained = responses.stream() // Changed from totalMarks to marksObtained
                 .mapToInt(ResponseSummaryDTO::getMarksObtained)
                 .sum();
 
+        // Fetch exam details to get maxMarks and examTitle
+        ResponseEntity<ExamResponseDTO> examResponseEntity = null;
+        try {
+            examResponseEntity = examFeignClient.getExamById(examId);
+        } catch (Exception e) {
+            throw new RuntimeException("Error communicating with Exam Management Service: " + e.getMessage(), e);
+        }
+
+        if (!examResponseEntity.getStatusCode().is2xxSuccessful() || examResponseEntity.getBody() == null) {
+            throw new ResourceNotFoundException("Failed to retrieve exam details for exam " + examId + ". Status: " + examResponseEntity.getStatusCode());
+        }
+        ExamResponseDTO examDetails = examResponseEntity.getBody();
+        Integer maxMarks = examDetails.getTotalMarks();
+        String examTitle = examDetails.getTitle(); // Get examTitle
+
+        if (maxMarks == null) {
+            throw new IllegalStateException("Max marks not found for exam: " + examId);
+        }
+        if (examTitle == null) {
+            throw new IllegalStateException("Exam title not found for exam: " + examId);
+        }
+
+        // Fetch user details to get username
+        ResponseEntity<UserDTO> userResponseEntity = null;
+        try {
+            userResponseEntity = userFeignClient.getUserById(userId);
+        } catch (Exception e) {
+            throw new RuntimeException("Error communicating with User Service: " + e.getMessage(), e);
+        }
+
+        if (!userResponseEntity.getStatusCode().is2xxSuccessful() || userResponseEntity.getBody() == null) {
+            throw new ResourceNotFoundException("Failed to retrieve user details for user " + userId + ". Status: " + userResponseEntity.getStatusCode());
+        }
+        String username = userResponseEntity.getBody().getName();
+        if (username == null) {
+            throw new IllegalStateException("Username not found for user: " + userId);
+        }
+
+
+        // Calculate performance metrics based on new logic
         String performance;
-        if (totalMarks > 60) {
+        if (marksObtained >= maxMarks * 0.6) { // Changed to marksObtained
             performance = "First Class";
-        } else if (totalMarks > 40) {
+        } else if (marksObtained >= maxMarks * 0.4) { // Changed to marksObtained
             performance = "Second Class";
         } else {
             performance = "Fail";
@@ -74,10 +124,14 @@ public class ReportService {
         Report report = new Report();
         report.setUserId(userId);
         report.setExamId(examId);
-        report.setTotalMarks(totalMarks);
+        report.setExamTitle(examTitle); // Set examTitle
+        report.setUsername(username); // Set username
+        report.setMaxMarks(maxMarks); // Set maxMarks
+        report.setMarksObtained(marksObtained); // Changed from totalMarks to marksObtained
         report.setPerformanceMetrics(performance);
 
-        return reportRepository.save(report);
+        Report savedReport = reportRepository.save(report);
+        return mapToDto(savedReport); // Return DTO
     }
 
     /**
@@ -90,7 +144,7 @@ public class ReportService {
     public List<ReportSummaryDTO> getReportsByExamId(Integer examId) {
         List<Report> reports = reportRepository.findByExamId(examId);
         if (reports.isEmpty()) {
-            throw new ResourceNotFoundException("Exam ID not found: " + examId); // Use specific exception
+            throw new ResourceNotFoundException("No reports found for exam ID: " + examId); // Use specific exception
         }
         return reports.stream()
                 .map(this::mapToDto)
@@ -152,8 +206,11 @@ public class ReportService {
         return ReportSummaryDTO.builder()
                 .reportId(report.getReportId())
                 .examId(report.getExamId())
+                .examTitle(Optional.ofNullable(report.getExamTitle()).orElse("N/A")) // Map examTitle
                 .userId(report.getUserId())
-                .totalMarks(report.getTotalMarks())
+                .username(Optional.ofNullable(report.getUsername()).orElse("N/A")) // Handle null username
+                .maxMarks(Optional.ofNullable(report.getMaxMarks()).orElse(0)) // Handle null maxMarks, default to 0
+                .marksObtained(report.getMarksObtained()) // Changed from totalMarks to marksObtained
                 .performanceMetrics(report.getPerformanceMetrics())
                 .build();
     }
@@ -214,13 +271,13 @@ public class ReportService {
     }
 
     /**
-     * Returns the topper(s) based on the highest total marks. If multiple reports
-     * have the same maximum total marks, it returns the DTO of the first one found.
+     * Returns the topper(s) based on the highest marks obtained. If multiple reports
+     * have the same maximum marks obtained, it returns the DTO of the first one found.
      *
      * @return A ResponseEntity containing the ReportSummaryDTO of the topper, or a notFound status if no topper is found.
      */
     public ResponseEntity<ReportSummaryDTO> returnTopper() {
-        List<Report> result = reportRepository.findTopperByTotalMarks();
+        List<Report> result = reportRepository.findTopperByMarksObtained(); // Changed method name
 
         if (!result.isEmpty()) {
             // If multiple toppers, just return the first one for the DTO
@@ -228,8 +285,11 @@ public class ReportService {
             ReportSummaryDTO dto = ReportSummaryDTO.builder()
                     .reportId(report.getReportId())
                     .examId(report.getExamId())
+                    .examTitle(report.getExamTitle()) // Include examTitle
                     .userId(report.getUserId())
-                    .totalMarks(report.getTotalMarks())
+                    .username(report.getUsername()) // Include username
+                    .maxMarks(report.getMaxMarks()) // Include maxMarks
+                    .marksObtained(report.getMarksObtained()) // Changed from totalMarks to marksObtained
                     .performanceMetrics(report.getPerformanceMetrics())
                     .build();
 
@@ -240,9 +300,9 @@ public class ReportService {
     }
 
     /**
-     * Retrieves the rank of a specific user based on their highest total marks across all their exams,
-     * relative to the highest total marks of all other unique users.
-     * Users with the same highest total marks will share the same rank.
+     * Retrieves the rank of a specific user based on their highest marks obtained across all their exams,
+     * relative to the highest marks obtained of all other unique users.
+     * Users with the same highest marks obtained will share the same rank.
      *
      * @param userId The ID of the user whose rank is to be determined.
      * @return The rank of the user.
@@ -251,7 +311,7 @@ public class ReportService {
      */
     public int returnRank(Integer userId) {
         // 1. Get ordered list of users with their max marks directly from the repository using a custom query
-        List<UserMaxMarksProjection> userMaxMarksList = reportRepository.findUserMaxMarksOrderedByTotalMarksDesc();
+        List<UserMaxMarksProjection> userMaxMarksList = reportRepository.findUserMaxMarksOrderedByMarksObtainedDesc(); // Changed method name
 
         if (userMaxMarksList.isEmpty()) {
             throw new RuntimeException("No reports found in the system to determine rank.");

@@ -1,63 +1,36 @@
-<mat-card class="top-metrics-card">
-    <div class="metric-item">
-      <span class="metric-label">Exams Attempted:</span>
-      <span class="metric-value">{{ examCount }}</span>
+<div class="report-container">
+  <!-- Top Section -->
+  <div class="report-header">
+    <!-- Exams Attempted -->
+    <div class="attempts">
+      <h3>Exams Attempted:</h3>
+      <p>{{ examCount }}</p>
     </div>
-    <div class="metric-item">
-      <span class="metric-label">Rank:</span>
-      <span class="metric-value">{{ rank }}</span>
+
+    <!-- Rank -->
+    <div class="rank">
+      <h3>Rank:</h3>
+      <p>{{ rank }}</p>
     </div>
-  </mat-card>
-  
-  <mat-card class="all-reports-card">
-    <h3>All Your Reports</h3>
-    
-    <div class="filter-container">
-      <mat-form-field appearance="outline">
-        <mat-label>Filter by Exam ID</mat-label>
-        <input matInput type="number" [(ngModel)]="filterExamId" placeholder="Enter Exam ID">
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="filterReportsByExamId()">Filter</button>
-      <button mat-raised-button color="warn" (click)="loadStudentReports()">Clear Filter</button>
+
+    <!-- Filter -->
+    <div class="filter">
+      <label for="examId">Exam ID</label>
+      <input id="examId" type="text" [(ngModel)]="filterExamId" placeholder="Enter Exam ID">
+      <button mat-raised-button color="primary" (click)="filterReportsByExamId()">Search</button>
     </div>
-  
-    <table mat-table [dataSource]="studentReports" class="mat-elevation-z8">
-  
-      <!-- Report ID Column -->
-      <ng-container matColumnDef="reportId">
-        <th mat-header-cell *matHeaderCellDef>Report ID</th>
-        <td mat-cell *matCellDef="let report">{{report.reportId}}</td>
-      </ng-container>
-  
-      <!-- Exam ID Column -->
-      <ng-container matColumnDef="examId">
-        <th mat-header-cell *matHeaderCellDef>Exam ID</th>
-        <td mat-cell *matCellDef="let report">{{report.examId}}</td>
-      </ng-container>
-  
-      <!-- User ID Column (Added based on your error and previous discussions) -->
-      <ng-container matColumnDef="userId">
-        <th mat-header-cell *matHeaderCellDef> User ID </th>
-        <td mat-cell *matCellDef="let report"> {{ report.userId }} </td>
-      </ng-container>
-  
-      <!-- Total Marks Column -->
-      <ng-container matColumnDef="totalMarks">
-        <th mat-header-cell *matHeaderCellDef>Total Marks</th>
-        <td mat-cell *matCellDef="let report">{{report.totalMarks}}</td>
-      </ng-container>
-  
-      <!-- Performance Metrics Column -->
-      <ng-container matColumnDef="performanceMetrics">
-        <th mat-header-cell *matHeaderCellDef>Performance</th>
-        <td mat-cell *matCellDef="let report">{{report.performanceMetrics}}</td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  
-    <div *ngIf="studentReports.length === 0" class="no-records-message">
-      No reports found for this student.
-    </div>
-  </mat-card>
+  </div>
+
+  <!-- Reports Section -->
+  <div class="report-list">
+    <mat-card *ngFor="let report of studentReports" class="report-card">
+      <mat-card-title>Exam ID: {{ report.examId }}</mat-card-title>
+      <mat-card-content>
+        <p><strong>Exam Title:</strong> {{ report.examTitle }}</p>
+        <p><strong>Marks Obtained:</strong> {{ report.marksObtained }}</p>
+        <p><strong>Max Marks:</strong> {{ report.maxMarks }}</p>
+        <p><strong>Performance:</strong> {{ report.performanceMetrics }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

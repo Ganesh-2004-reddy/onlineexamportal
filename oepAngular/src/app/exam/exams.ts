@@ -52,6 +52,7 @@ export class ExamsComponent implements OnInit {
       error: () => alert('Failed to load exams')
     });
   }
+  
 
   checkAttemptedExams() {
     this.exams.forEach(exam => {

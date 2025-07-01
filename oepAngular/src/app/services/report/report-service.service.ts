@@ -5,8 +5,11 @@ import { Observable } from 'rxjs';
 export interface ReportSummaryDTO {
   reportId: number;
   examId: number;
-  userId: any;
-  totalMarks: number;
+  examTitle: string; // Added examTitle
+  userId: number;
+  username: string; // Added username
+  maxMarks: number; // Added maxMarks
+  marksObtained: number; // Changed from totalMarks to marksObtained
   performanceMetrics: string;
 }
 

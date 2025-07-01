@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { QuestionService,Question } from '../services/question/question-service';
-
+ 
 @Component({
   selector: 'app-import-question-dialog',
   standalone: true,
@@ -28,13 +28,13 @@ export class ImportQuestionDialogComponent {
   selectedQuestions: number[] = [];
   questionBank: Question[] = [];
   mappedIds: number[] = [];
-
+ 
   filteredQuestions: Question[] = [];
   categories: string[] = [];
   difficulties: string[] = ['easy', 'medium', 'hard'];
   selectedCategory = '';
   selectedDifficulty = '';
-
+ 
   constructor(
     private dialogRef: MatDialogRef<ImportQuestionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -42,11 +42,11 @@ export class ImportQuestionDialogComponent {
   ) {
     this.questionBank = data.questionBank;
     this.mappedIds = data.mappedQuestionIds;
-
+ 
     this.categories = [...new Set(this.questionBank.map(q => q.category))];
     this.filteredQuestions = [...this.questionBank];
   }
-
+ 
   toggleSelection(id: number) {
     const index = this.selectedQuestions.indexOf(id);
     if (index > -1) {
@@ -55,11 +55,11 @@ export class ImportQuestionDialogComponent {
       this.selectedQuestions.push(id);
     }
   }
-
+ 
   isMapped(id: number): boolean {
     return this.mappedIds.includes(id);
   }
-
+ 
   filterQuestions() {
     this.filteredQuestions = this.questionBank.filter(q => {
       return (
@@ -68,17 +68,17 @@ export class ImportQuestionDialogComponent {
       );
     });
   }
-
+ 
   clearFilters() {
     this.selectedCategory = '';
     this.selectedDifficulty = '';
     this.filteredQuestions = [...this.questionBank];
   }
-
+ 
   importSelected() {
     this.dialogRef.close(this.selectedQuestions);
   }
-
+ 
   cancel() {
     this.dialogRef.close();
   }
