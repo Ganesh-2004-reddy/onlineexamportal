@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; // Explicitly import CommonModule
 
 @Component({
-  selector: 'app-admin-reports',
+  selector: 'app-admin-report',
   standalone: true,
   imports: [
     CommonModule, // Required for *ngIf and *ngFor (used implicitly by mat-table)
@@ -22,9 +22,10 @@ import { CommonModule } from '@angular/common'; // Explicitly import CommonModul
     MatSnackBarModule,
     MatFormFieldModule
   ],
-  templateUrl: './report.html' // Assuming the HTML file is now named 'report.html'
+  templateUrl: './report.html', // Assuming the HTML file is now named 'report.html'
+  styleUrls: ['./report.css'] // Ensure this path is correct
 })
-export class AdminReportsComponent implements OnInit {
+export class AdminReportComponent implements OnInit {
   reports: ReportSummaryDTO[] = []; // This will hold the currently displayed (filtered) reports
   allReports: ReportSummaryDTO[] = []; // This will hold all reports fetched from the backend (unfiltered)
   topper?: ReportSummaryDTO;
