@@ -6,6 +6,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { ExaminerHeaderComponent } from '../../../../shared-components/examiner-header/examiner-header';
+import { FooterComponent } from '../../../../shared-components/footer/footer';
 
 @Component({
   selector: 'app-view-report',
@@ -14,7 +16,9 @@ import { CommonModule } from '@angular/common';
     MatTableModule,
     MatCardModule,
     MatSnackBarModule,
-    CommonModule
+    CommonModule,
+    ExaminerHeaderComponent,
+    FooterComponent
   ],
   templateUrl: './view-report.html',
   styleUrls: ['./view-report.css']

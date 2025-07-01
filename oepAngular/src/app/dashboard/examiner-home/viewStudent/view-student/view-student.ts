@@ -25,16 +25,6 @@ export class ViewStudentsComponent implements OnInit {
   ngOnInit(): void {
     this.loadUsers();
   }
-
-  // loadStudents() {
-  //   this.roleService.getUsers.subscribe({
-  //     next: (data) => this.students = data,
-  //     error: (err) => {
-  //       console.error('Failed to fetch students:', err);
-  //       alert('Unable to load students');
-  //     }
-  //   });
-  // }
     loadUsers() {
     this.roleService.getUsers().subscribe({
       next: data => this.users = data,

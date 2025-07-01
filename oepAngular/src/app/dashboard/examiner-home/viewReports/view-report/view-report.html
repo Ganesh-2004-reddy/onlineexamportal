@@ -1,66 +1,67 @@
-<<<<<<< HEAD
+
 <app-examiner-header></app-examiner-header>
 
-<p>view-report works!</p>
-<app-footer></app-footer>
-=======
+
 <mat-card>
-  <h3>All Reports</h3>
-  <table mat-table [dataSource]="reports" class="mat-elevation-z8">
-    <!-- Report ID Column -->
-    <ng-container matColumnDef="reportId">
-      <th mat-header-cell *matHeaderCellDef>Report ID</th>
-      <td mat-cell *matCellDef="let report">{{report.reportId}}</td>
-    </ng-container>
+    <h3>All Reports</h3>
+    <table mat-table [dataSource]="reports" class="mat-elevation-z8">
+      <!-- Report ID Column -->
+      <ng-container matColumnDef="reportId">
+        <th mat-header-cell *matHeaderCellDef>Report ID</th>
+        <td mat-cell *matCellDef="let report">{{report.reportId}}</td>
+      </ng-container>
+  
+      <!-- User ID Column -->
+      <ng-container matColumnDef="userId">
+        <th mat-header-cell *matHeaderCellDef>User ID</th>
+        <td mat-cell *matCellDef="let report">{{report.userId}}</td>
+      </ng-container>
+  
+      <!-- Username Column -->
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef>Username</th>
+        <td mat-cell *matCellDef="let report">{{report.username}}</td>
+      </ng-container>
+  
+      <!-- Exam ID Column -->
+      <ng-container matColumnDef="examId">
+        <th mat-header-cell *matHeaderCellDef>Exam ID</th>
+        <td mat-cell *matCellDef="let report">{{report.examId}}</td>
+      </ng-container>
+  
+      <!-- Exam Title Column -->
+      <ng-container matColumnDef="examTitle">
+        <th mat-header-cell *matHeaderCellDef>Exam Title</th>
+        <td mat-cell *matCellDef="let report">{{report.examTitle}}</td>
+      </ng-container>
+  
+      <!-- Marks Obtained Column -->
+      <ng-container matColumnDef="marksObtained">
+        <th mat-header-cell *matHeaderCellDef>Marks Obtained</th>
+        <td mat-cell *matCellDef="let report">{{report.marksObtained}}</td>
+      </ng-container>
+  
+      <!-- Max Marks Column -->
+      <ng-container matColumnDef="maxMarks">
+        <th mat-header-cell *matHeaderCellDef>Max Marks</th>
+        <td mat-cell *matCellDef="let report">{{report.maxMarks}}</td>
+      </ng-container>
+  
+      <!-- Performance Metrics Column -->
+      <ng-container matColumnDef="performanceMetrics">
+        <th mat-header-cell *matHeaderCellDef>Performance</th>
+        <td mat-cell *matCellDef="let report">{{report.performanceMetrics}}</td>
+      </ng-container>
+  
+      <!-- Table Rows -->
+      <tr mat-header-row *matHeaderRowDef="['reportId', 'userId', 'username', 'examId', 'examTitle', 'marksObtained', 'maxMarks', 'performanceMetrics']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['reportId', 'userId', 'username', 'examId', 'examTitle', 'marksObtained', 'maxMarks', 'performanceMetrics'];"></tr>
+    </table>
+    <div *ngIf="reports.length === 0" class="no-records-message">
+      No reports found matching the criteria.
+    </div>
+  </mat-card>
 
-    <!-- User ID Column -->
-    <ng-container matColumnDef="userId">
-      <th mat-header-cell *matHeaderCellDef>User ID</th>
-      <td mat-cell *matCellDef="let report">{{report.userId}}</td>
-    </ng-container>
+<app-footer></app-footer>
 
-    <!-- Username Column -->
-    <ng-container matColumnDef="username">
-      <th mat-header-cell *matHeaderCellDef>Username</th>
-      <td mat-cell *matCellDef="let report">{{report.username}}</td>
-    </ng-container>
 
-    <!-- Exam ID Column -->
-    <ng-container matColumnDef="examId">
-      <th mat-header-cell *matHeaderCellDef>Exam ID</th>
-      <td mat-cell *matCellDef="let report">{{report.examId}}</td>
-    </ng-container>
-
-    <!-- Exam Title Column -->
-    <ng-container matColumnDef="examTitle">
-      <th mat-header-cell *matHeaderCellDef>Exam Title</th>
-      <td mat-cell *matCellDef="let report">{{report.examTitle}}</td>
-    </ng-container>
-
-    <!-- Marks Obtained Column -->
-    <ng-container matColumnDef="marksObtained">
-      <th mat-header-cell *matHeaderCellDef>Marks Obtained</th>
-      <td mat-cell *matCellDef="let report">{{report.marksObtained}}</td>
-    </ng-container>
-
-    <!-- Max Marks Column -->
-    <ng-container matColumnDef="maxMarks">
-      <th mat-header-cell *matHeaderCellDef>Max Marks</th>
-      <td mat-cell *matCellDef="let report">{{report.maxMarks}}</td>
-    </ng-container>
-
-    <!-- Performance Metrics Column -->
-    <ng-container matColumnDef="performanceMetrics">
-      <th mat-header-cell *matHeaderCellDef>Performance</th>
-      <td mat-cell *matCellDef="let report">{{report.performanceMetrics}}</td>
-    </ng-container>
-
-    <!-- Table Rows -->
-    <tr mat-header-row *matHeaderRowDef="['reportId', 'userId', 'username', 'examId', 'examTitle', 'marksObtained', 'maxMarks', 'performanceMetrics']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['reportId', 'userId', 'username', 'examId', 'examTitle', 'marksObtained', 'maxMarks', 'performanceMetrics'];"></tr>
-  </table>
-  <div *ngIf="reports.length === 0" class="no-records-message">
-    No reports found matching the criteria.
-  </div>
-</mat-card>
->>>>>>> 5d595ce87ed0b3d963223382a096cb4764808f7e
