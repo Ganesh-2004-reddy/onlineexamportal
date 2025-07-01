@@ -1,37 +1,40 @@
 <mat-card class="top-section">
-  <div>
-    <h3>Topper</h3>
-    <div *ngIf="topper">
-      User {{topper.username}} (ID: {{topper.userId}}) scored {{topper.marksObtained}}/{{topper.maxMarks}} - {{topper.performanceMetrics}}
-    </div>
+  <h3>Topper</h3>
+  <div *ngIf="topper">
+    User {{topper.username}} (ID: {{topper.userId}}) scored {{topper.marksObtained}}/{{topper.maxMarks}} - {{topper.performanceMetrics}}
   </div>
-  <div>
-    <h3>Delete Reports</h3>
-    <mat-form-field appearance="fill">
-      <mat-label>User ID</mat-label>
-      <input matInput type="number" [(ngModel)]="userIdToDelete">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Exam ID</mat-label>
-      <input matInput type="number" [(ngModel)]="examIdToDelete">
-    </mat-form-field>
-    <button mat-button color="warn" (click)="deleteReports()">Delete Selected</button>
-    <button mat-stroked-button color="warn" (click)="deleteAll()">Delete All Reports</button>
-  </div>
+</mat-card>
+
+<mat-card class="delete-section">
+  <h3>Delete Reports</h3>
+  <mat-form-field appearance="fill">
+    <mat-label>User ID</mat-label>
+    <input matInput type="number" [(ngModel)]="userIdToDelete">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Exam ID</mat-label>
+    <input matInput type="number" [(ngModel)]="examIdToDelete">
+  </mat-form-field>
+  <button mat-button color="warn" (click)="deleteReports()">Delete Selected</button>
+  <button mat-stroked-button color="warn" (click)="deleteAll()">Delete All Reports</button>
 </mat-card>
 
 <mat-card class="filter-section">
   <h3>Filter Reports</h3>
-  <mat-form-field appearance="fill">
-    <mat-label>Filter by User ID</mat-label>
-    <input matInput type="number" [(ngModel)]="filterUserId">
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Filter by Exam ID</mat-label>
-    <input matInput type="number" [(ngModel)]="filterExamId">
-  </mat-form-field>
-  <button mat-raised-button color="primary" (click)="applyFilters()">Apply Filters</button>
-  <button mat-stroked-button color="basic" (click)="clearFilters()">Clear Filters</button>
+  <div class="filter-row">
+    <mat-form-field appearance="fill">
+      <mat-label>Filter by User ID</mat-label>
+      <input matInput type="number" [(ngModel)]="filterUserId">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Filter by Exam ID</mat-label>
+      <input matInput type="number" [(ngModel)]="filterExamId">
+    </mat-form-field>
+  </div>
+  <div class="filter-row">
+    <button mat-raised-button color="primary" (click)="applyFilters()">Apply Filters</button>
+    <button mat-stroked-button color="basic" (click)="clearFilters()">Clear Filters</button>
+  </div>
 </mat-card>
 
 <mat-card>

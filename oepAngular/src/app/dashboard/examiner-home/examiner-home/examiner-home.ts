@@ -8,10 +8,10 @@ import { FooterComponent } from '../../../shared-components/footer/footer';
 import { ExaminerHeaderComponent } from '../../../shared-components/examiner-header/examiner-header';
 import { ViewExamsComponent } from '../viewExams/view-exams/view-exams';
 import { ViewStudentsComponent } from '../viewStudent/view-student/view-student';
-import { ViewReport } from '../viewReports/view-report/view-report';
+import { ViewReportComponent } from '../viewReports/view-report/view-report';
 @Component({
   selector: 'app-examiner-home',
-  imports: [CommonModule, RouterModule, MatButtonModule,ExaminerHeaderComponent, FooterComponent,ViewExamsComponent, ViewStudentsComponent, ViewReport],
+  imports: [CommonModule, RouterModule, MatButtonModule,ExaminerHeaderComponent, FooterComponent,ViewExamsComponent, ViewStudentsComponent, ViewReportComponent],
   templateUrl: './examiner-home.html',
   styleUrl: './examiner-home.css'
 })

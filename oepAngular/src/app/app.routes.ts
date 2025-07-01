@@ -18,7 +18,7 @@ import { landingPageComponent } from './landing-page/landing-page';
 import { ExaminerHome } from './dashboard/examiner-home/examiner-home/examiner-home';
 import { ViewStudentsComponent } from './dashboard/examiner-home/viewStudent/view-student/view-student';
 import { ViewExamsComponent } from './dashboard/examiner-home/viewExams/view-exams/view-exams';
-import { ViewReport } from './dashboard/examiner-home/viewReports/view-report/view-report';
+import { ViewReportComponent } from './dashboard/examiner-home/viewReports/view-report/view-report';
 
 
 export const appRoutes: Routes = [
@@ -81,7 +81,7 @@ export const appRoutes: Routes = [
 },
 { path: 'examiner/students', component: ViewStudentsComponent },
 { path: 'examiner/exams', component: ViewExamsComponent },
-{ path: 'examiner/reports', component: ViewReport }           
+{ path: 'examiner/reports', component: ViewReportComponent }           
 
 
 ];
