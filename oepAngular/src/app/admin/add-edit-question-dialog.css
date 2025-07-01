@@ -1,0 +1,59 @@
+/* Heading styling */
+h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #272729;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Form container */
+  form {
+    margin: 0 auto;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Form fields */
+  mat-form-field {
+    width: 48%;
+    margin-bottom: 20px;
+    padding: 2px;
+  }
+  
+  /* Button group */
+  form div[style*="justify-content"] {
+    margin-top: 20px;
+    text-align: right;
+  }
+  
+  /* Buttons */
+  button[mat-button],
+  button[mat-raised-button] {
+    margin-left: 10px;
+    min-width: 100px;
+  }
+  
+  /* Responsive tweaks */
+  @media (max-width: 600px) {
+    form {
+      padding: 15px;
+    }
+  
+    h2 {
+      font-size: 20px;
+    }
+  
+    form div[style*="justify-content"] {
+      text-align: center;
+    }
+  
+    button[mat-button],
+    button[mat-raised-button] {
+      margin: 10px 5px 0 5px;
+      width: 100%;
+    }
+  }
+  

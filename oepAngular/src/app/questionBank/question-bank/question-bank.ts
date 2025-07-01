@@ -1,15 +1,3 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-question-bank',
-//   imports: [],
-//   templateUrl: './question-bank.html',
-//   styleUrl: './question-bank.css'
-// })
-// export class QuestionBank {
-
-// }
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -25,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { QuestionService, Question } from '../../services/question/question-service';
 import { AddEditQuestionDialogComponent } from '../../admin/add-edit-question-dialog';
+import { AdminHeader } from '../../shared-components/admin-header/admin-header';
+import{ FooterComponent } from '../../shared-components/footer/footer';
 
 @Component({
   selector: 'app-question-bank',
@@ -42,7 +32,9 @@ import { AddEditQuestionDialogComponent } from '../../admin/add-edit-question-di
     RouterLink,
     FormsModule,
     HttpClientModule,
-    AddEditQuestionDialogComponent
+    AddEditQuestionDialogComponent,
+    AdminHeader,
+    FooterComponent
   ],
   templateUrl: './question-bank.html',
   styleUrls: ['./question-bank.css']

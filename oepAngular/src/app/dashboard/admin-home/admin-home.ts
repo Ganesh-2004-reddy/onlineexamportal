@@ -1,16 +1,3 @@
-// import { Component } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-
-// @Component({
-//   selector: 'app-admin-home',
-//   imports: [CommonModule],
-//   templateUrl: './admin-home.html',
-//   styleUrl: './admin-home.css'
-// })
-// export class AdminHomeComponent {
-
-// }
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -19,6 +6,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon' ;
+import { AdminHeader } from '../../shared-components/admin-header/admin-header';
+import { FooterComponent } from '../../shared-components/footer/footer';
 
 @Component({
   standalone: true,
@@ -30,8 +19,10 @@ import { MatIconModule } from '@angular/material/icon' ;
     MatToolbarModule,
     MatButtonModule,
     MatMenuModule,
-    MatIconModule
-  ],
+    MatIconModule,
+    AdminHeader,
+    FooterComponent
+],
   templateUrl: './admin-home.html',
   styleUrls: ['./admin-home.css']
 })

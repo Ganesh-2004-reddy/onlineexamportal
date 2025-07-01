@@ -1,5 +1,9 @@
 .container {
   padding: 24px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/OIP.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 82vh;
 }
 
 .exam-list {
@@ -11,8 +15,22 @@
 
 .exam-card {
   width: 300px;
+  background-color: rgba(252, 251, 251, 0.826);
+  border-radius: 5px;
 }
-
+mat-card-title{
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+button{
+  border-radius: 9px;
+}
+button:hover{
+  background-color: rgba(30, 143, 255, 0.685);
+  color: rgb(240, 239, 239);
+  transition: 0.3s;
+}
 .spacer {
   flex: 1 1 auto;
 }

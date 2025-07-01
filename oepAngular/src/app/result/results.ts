@@ -8,46 +8,6 @@
  import { MatToolbar } from '@angular/material/toolbar';
  import { UserHeaderComponent } from '../shared-components/user-header/user-header';
  import { FooterComponent } from '../shared-components/footer/footer';
-
-// @Component({
-//   selector: 'app-results',
-//   standalone: true,
-//   imports: [MatCard, MatCardContent, MatCardTitle, MatToolbar, CommonModule, UserHeaderComponent, FooterComponent],
-//   templateUrl: './results.html',
-//   styleUrls: ['./results.css']
-// })
-// export class ResultsComponent implements OnInit {
-//   examId!: number;
-//   userId!: number;
-//   results: ResponseSummary[] = [];
-//   totalMarks = 0;
-//   isLoading = true;
-
-//   constructor(private resultService: ResultService, private route: ActivatedRoute) {}
-
-//   ngOnInit(): void {
-//     this.examId = Number(localStorage.getItem('examId'));
-//     this.userId = Number(localStorage.getItem('userId'));
-
-//     if (!this.examId || !this.userId) {
-//       alert('Missing exam or user information');
-//       return;
-//     }
-
-//     this.resultService.getResult(this.examId, this.userId).subscribe({
-//       next: (res) => {
-//         this.results = res;
-//         this.totalMarks = res.reduce((sum, r) => sum + r.marksObtained, 0);
-//         this.isLoading = false;
-//       },
-//       error: (err) => {
-//         alert('Failed to load results: ' + err.message);
-//         this.isLoading = false;
-//       }
-//     });
-//   }
-// }
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ExamService, Exam, ResponseSummaryDTO } from '../services/exam-service';

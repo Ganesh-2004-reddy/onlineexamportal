@@ -21,9 +21,14 @@
 }
 
 .welcome-container {
+  padding: 24px;
   text-align: center;
-  padding: 50px 20px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.418), rgba(0, 0, 0, 0.354)), url('/OIP.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 82vh;
 }
+
 
 .welcome-container h1 {
   font-size: 2rem;
@@ -40,6 +45,8 @@
   margin: 10px;
   padding: 12px 24px;
   font-size: 1rem;
+  background-color: rgba(48, 132, 222, 0.747);
+  color: black;
 }
 
 .footer {

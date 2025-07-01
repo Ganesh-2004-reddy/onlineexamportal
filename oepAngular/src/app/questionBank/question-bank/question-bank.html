@@ -1,9 +1,4 @@
-<mat-toolbar color="primary">
-  <span>Question Bank</span>
-  <span class="spacer"></span>
-  <button mat-button [routerLink]="['/admin-home']">Back to Dashboard</button>
-</mat-toolbar>
-
+<app-admin-header></app-admin-header>
 <div class="container">
   <div class="filters">
     <mat-form-field appearance="fill">
@@ -22,12 +17,12 @@
       </mat-select>
     </mat-form-field>
 
-    <button mat-stroked-button color="warn" (click)="clearFilters()">Clear Filters</button>
-    <input type="file" (change)="uploadCSV($event)" />
+    <button mat-stroked-button class="file-update-btn" color="warn" (click)="clearFilters()">Clear Filters</button>
+    <input type="file" class="upload-btn" (change)="uploadCSV($event)" />
   </div>
 
   <div class="actions">
-    <button mat-raised-button color="primary" (click)="addQuestion()">+ Add Question</button>
+    <button mat-raised-button  (click)="addQuestion()">+ Add Question</button>
   </div>
 
   <div class="question-list">
@@ -49,3 +44,4 @@
     </mat-card>
   </div>
 </div>
+<app-footer></app-footer>

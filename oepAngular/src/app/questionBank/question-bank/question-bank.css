@@ -1,25 +1,128 @@
+/* Container styling */
 .container {
-  padding: 20px;
+  padding: 30px;
+  max-width: 1200px;
+  margin: auto;
+  /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/OIP.png');
+  background-repeat: no-repeat;
+  background-position: fixed;
+  top: 50%; */
+  min-height: 82vh;
+  margin-bottom: 20px;
 }
 
+/* Toolbar layout */
+mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Filters section */
 .filters {
   display: flex;
-  gap: 15px;
-  align-items: center;
-  margin-bottom: 20px;
   flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
 }
 
+mat-form-field {
+  min-width: 200px;
+  flex: 1;
+}
+
+/* File input styling */
+input[type="file"] {
+  margin-top: 10px;
+}
+
+/* Action buttons */
 .actions {
   margin-bottom: 20px;
+  text-align: right;
 }
 
+.upload-btn {
+  margin-left: 10px;
+  padding: 6px 12px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Question list layout */
 .question-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
+  
 }
 
+/* Card styling */
 .question-card {
-  padding: 10px;
+  transition: box-shadow 0.3s ease;
+  border-radius: 8px;
+  background-color: rgba(233, 231, 231, 0.826);
+  border-radius: 5px;
+
+}
+
+.question-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.388);
+}
+
+/* Question title */
+mat-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #363637;
+  margin-bottom: 10px;
+  background-color: rgb(251, 249, 249);
+  padding: 15px;
+  border-radius: 5px;
+}
+
+/* Question details */
+mat-card-content p {
+  margin: 4px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+/* Options list */
+.question-card ul {
+  padding-left: 20px;
+  margin: 5px 0;
+  list-style-type: disc;
+}
+
+.question-card li {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Card actions */
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+button{
+  border-radius: 9px;
+}
+button:hover{
+  background-color: rgba(30, 143, 255, 0.685);
+  color: rgb(240, 239, 239);
+  transition: 0.3s;
 }
