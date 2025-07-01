@@ -1,17 +1,123 @@
-.container {
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif; /* Using Inter font as per instructions */
+}
+ 
+.split-container {
+  display: flex; /* Use flexbox to arrange the halves side-by-side */
+  height: 100vh; /* Make the container take full viewport height */
+  overflow: hidden; /* Hide any overflow */
+}
+ 
+.image-half {
+  flex: 1; /* Takes up 50% of the width */
+  /* Using a placeholder image URL. You can replace this with your own. */
+  position: relative; /* For positioning the overlay */
+  display: flex; /* For centering content within the image */
+  justify-content: center;
+  align-items: center;
+  color: white; /* Text color for overlay */
+  text-align: center;
+  background-color:black; /* Fallback background color */
+}
+ 
+.image-overlay {
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+  padding: 20px;
+  border-radius: 8px;
+}
+ 
+.image-overlay h1 {
+  font-size: 3em;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+ 
+.image-overlay p {
+  font-size: 1.2em;
+  color:white;
+  font-style: italic;
+}
+ 
+.register-half {
+  flex: 1; /* Takes up the other 50% of the width */
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-}
-
-mat-card {
-  width: 450px;
+  background-color: #f5f5f5; /* A light background for the register side */
   padding: 20px;
 }
-
+ 
+mat-card {
+  width: 100%; /* Make the card responsive within its half */
+  max-width: 450px; /* Limit the max width of the card */
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  border-radius: 8px;
+}
+ 
+mat-card h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 2em;
+}
+ 
 mat-form-field {
   display: block;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* Increased margin for better spacing */
+}
+ 
+/* Style for the button */
+button[mat-raised-button] {
+  width: 100%;
+  padding: 12px 0;
+  font-size: 1.1em;
+  margin-top: 10px; /* Space above the button */
+  border-radius: 5px; /* Rounded corners for buttons */
+}
+ 
+p { /* Styling for the "Already have an account?" paragraph */
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1em;
+  color: #555;
+}
+ 
+p a { /* Styling for the link within the paragraph */
+  color: #007bff; /* A nice blue for links */
+  text-decoration: none;
+  font-weight: bold;
+}
+ 
+p a:hover {
+  text-decoration: underline;
+}
+ 
+/* Error message styling for the register form */
+.error {
+  color: #d32f2f; /* Material design error red */
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+ 
+/* Optional: Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .split-container {
+    flex-direction: column; /* Stack elements vertically on small screens */
+  }
+ 
+  .image-half {
+    height: 30vh; /* Adjust height for the image on smaller screens */
+  }
+ 
+  .register-half {
+    height: 70vh; /* Adjust height for the register form on smaller screens */
+  }
+ 
+  .image-overlay h1 {
+    font-size: 2.2em;
+  }
 }

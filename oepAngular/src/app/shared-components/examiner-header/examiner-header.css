@@ -1,0 +1,40 @@
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar{
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #6177f2;
+  color: rgb(234, 231, 231);
+}
+.header{
+  display: flex;
+  align-items: center;
+}
+img{
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 5px;
+  margin: 3px;
+}
+mat-toolbar h1{
+  font-size: 24px;
+  font-weight: 550;
+  color: #ffffffc9;
+  margin: 0; 
+}
+
+mat-toolbar .nav-buttons button:hover {
+  background-color: rgba(255, 255, 255, 0.877);
+  transition: 0.3s;
+}

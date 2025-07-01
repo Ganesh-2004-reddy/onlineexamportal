@@ -1,0 +1,156 @@
+.landing-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Full viewport height */
+    background: linear-gradient(to bottom right, #4F46E5, #8B5CF6); /* Indigo to Purple gradient */
+    color: white; /* White text for contrast */
+    font-family: Arial, sans-serif; /* Basic sans-serif font */
+  }
+   
+  /* Header styling */
+  .header {
+    display: flex;
+    justify-content: space-between; /* Space content to left and right */
+    align-items: center;
+    padding: 15px 30px;
+    background-color: rgba(0, 0, 0, 0.2); /* Slightly transparent background */
+  }
+   
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+   
+  .logo-placeholder {
+    width: 30px; /* Size of the empty logo space */
+    height: 30px;
+    background-color: white; /* White background for the empty logo */
+    border-radius: 5px; /* Slightly rounded corners */
+    margin-right: 10px; /* Space between logo and name */
+  }
+  img{
+    width: 30px;
+    border-radius: 5px;
+  }
+   
+  .site-name {
+    font-size: 24px;
+    font-weight: bold;
+  }
+   
+  .login-button {
+    padding: 8px 16px;
+    background-color: white;
+    color: #4F46E5; /* Indigo text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-right: 10px;
+  }
+   
+  .login-button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px); /* Slight lift on hover */
+  }
+   
+  .register-button {
+    padding: 8px 16px;
+    background-color: white;
+    color: #4F46E5; /* Indigo text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
+  }
+   
+  .register-button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px); /* Slight lift on hover */
+  }
+   
+  /* Main hero content section */
+  .hero-main {
+    flex-grow: 1; /* Takes up all remaining vertical space */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    text-align: center; /* Center text within the content block */
+    padding: 20px;
+    box-sizing: border-box; /* Include padding in element's size */
+  }
+   
+  .hero-content {
+    max-width: 800px; /* Max width for text readability */
+    padding: 40px;
+    background-color: rgba(0, 0, 0, 0.3); /* Transparent dark background */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+  }
+   
+  .hero-title {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+   
+  .hero-tagline {
+    font-size: 24px;
+    font-style:italic;
+    margin-bottom: 0; /* No extra space below tagline */
+  }
+   
+  /* Animation for initial content load */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+   
+  .animate-fadeIn {
+    animation: fadeIn 1s ease-out forwards;
+  }
+   
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column; /* Stack items vertically in header on small screens */
+      padding: 10px;
+    }
+    .header-left {
+      margin-bottom: 10px; /* Space below branding when stacked */
+    }
+    .site-name {
+      font-size: 20px;
+    }
+    .login-button {
+      font-size: 14px;
+      padding: 6px 12px;
+    }
+    .hero-title {
+      font-size: 36px;
+    }
+    .hero-tagline {
+      font-size: 20px;
+    }
+    .hero-content {
+      padding: 25px;
+    }
+  }
+   
+   
+   
+  /* Basic CSS Reset */
+  html, body {
+    margin: 10px;
+    padding: 10px;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  }
+   
+  body {
+    font-family: Arial, sans-serif; /* Basic system font */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+  }

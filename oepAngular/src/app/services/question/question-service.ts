@@ -1,14 +1,4 @@
-// import { Injectable } from '@angular/core';
 
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class QuestionService {
-
-//   constructor() { }
-// }
-
-// src/app/services/question.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -20,8 +10,8 @@ export interface Question {
   category: string;
   difficulty: string;
   correctAnswer: string;
-  option1: string;              // ✅ Add these
-  option2: string;              // ✅ Add these
+  option1: string;              
+  option2: string;             
   options?: string[];           // optional array for frontend display
 }
 

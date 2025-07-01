@@ -4,7 +4,7 @@
 
 <div *ngIf="isLoading">Loading results...</div>
 
-<div *ngIf="!isLoading">
+<div *ngIf="!isLoading" class="result-container">
   <h3>Results for Exam: {{ examDetails?.title }}</h3>
   <p>{{ examDetails?.description }}</p>
   <p><strong>Duration:</strong> {{ examDetails?.duration }} minutes</p>

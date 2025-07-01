@@ -31,8 +31,5 @@ export class ExamServiceAttempt {
     return this.http.get<Question[]>(`${this.baseUrl}/attemptQuestions`);
   }
 
-  // submitExam(submission: ExamSubmission): Observable<any> {
-  //   return this.http.post(`http://localhost:8090/api/exam-management/${examId}/submit`, submissionDTO);
-
-  // }
+  
 }

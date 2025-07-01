@@ -1,9 +1,4 @@
-<mat-toolbar color="primary">
-  <span>Manage Questions</span>
-  <span class="spacer"></span>
-  <button mat-button [routerLink]="['/admin-home']">Back to Dashboard</button>
-</mat-toolbar>
-
+<app-admin-header></app-admin-header>
 <div class="container">
   <button mat-raised-button color="primary" (click)="addQuestion()">+ Add New Question</button>
   <button mat-raised-button color="accent" (click)="importQuestions()">Import from Question Bank</button>
@@ -23,10 +18,11 @@
         </p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="accent" (click)="editQuestion(q.questionId)">Edit</button>
-        <button mat-button color="warn" (click)="deleteQuestion(q.questionId)">Delete</button>
+        <button mat-raised-button  color="accent" (click)="editQuestion(q.questionId)">Edit</button>
+        <button mat-raised-button  color="warn" (click)="deleteQuestion(q.questionId)">Delete</button>
       </mat-card-actions>
     </mat-card>
   </div>
   
 </div>
+<app-footer></app-footer>

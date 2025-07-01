@@ -14,9 +14,16 @@ import { QuestionBankComponent } from './questionBank/question-bank/question-ban
 import { AuthGuard } from './guards/auth-guard';
 import { AdminReportsComponent } from './admin-report/report/report';
 import { StudentReportsComponent } from './student-report/report/report';
+import { landingPageComponent } from './landing-page/landing-page';
+import { ExaminerHome } from './dashboard/examiner-home/examiner-home/examiner-home';
+import { ViewStudentsComponent } from './dashboard/examiner-home/viewStudent/view-student/view-student';
+import { ViewExamsComponent } from './dashboard/examiner-home/viewExams/view-exams/view-exams';
+import { ViewReport } from './dashboard/examiner-home/viewReports/view-report/view-report';
+
 
 export const appRoutes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'landing-page', pathMatch: 'full' },
+  { path: 'landing-page',component: landingPageComponent},
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   {
@@ -64,10 +71,18 @@ export const appRoutes: Routes = [
   component: QuestionBankComponent
 },
 
+{ path: 'results', component: ResultsComponent }, 
 
-  //{ path: 'exam/:examId', component: AttemptExamComponent },     // To be created
-  { path: 'results', component: ResultsComponent },               // To be created
-  //{ path: 'update-profile', component: UpdateProfileComponent }, // To be created
+{
+  path: 'examiner-home',
+  component: ExaminerHome,
+  canActivate: [AuthGuard],
+  data: { role: 'EXAMINER' } 
+},
+{ path: 'examiner/students', component: ViewStudentsComponent },
+{ path: 'examiner/exams', component: ViewExamsComponent },
+{ path: 'examiner/reports', component: ViewReport }           
+
 
 ];
 

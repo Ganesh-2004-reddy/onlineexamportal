@@ -1,0 +1,16 @@
+<app-examiner-header></app-examiner-header>
+
+<div class="home-container">
+    <h1>Welcome to Teckathon, {{ user?.name || 'Student' }}!</h1>
+    <div class="view-student container">
+    <app-view-students></app-view-students>
+    </div>
+    <div class="view-exam container">
+    <app-view-exams></app-view-exams>
+    </div>
+    <div class="view-report container">
+    <app-view-report></app-view-report>
+    </div>
+</div>
+
+<app-footer></app-footer>
