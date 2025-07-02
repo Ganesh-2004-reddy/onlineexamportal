@@ -35,6 +35,7 @@ export class RegisterComponent {
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     });
+    
   }
 
   onSubmit() {

@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewStudentsComponent } from './view-student';
 
-describe('ViewStudent', () => {
+
+describe('ViewStudentsComponent', () => {
   let component: ViewStudentsComponent;
   let fixture: ComponentFixture<ViewStudentsComponent>;
 

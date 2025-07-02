@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewExamsComponent } from './view-exams';
 
-describe('ViewExams', () => {
+
+describe('ViewExamsComponent', () => {
   let component: ViewExamsComponent;
   let fixture: ComponentFixture<ViewExamsComponent>;
 
