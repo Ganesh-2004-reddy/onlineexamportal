@@ -8,6 +8,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; // Explicitly import CommonModule
+import { AdminHeader } from '../../shared-components/admin-header/admin-header';
+import { FooterComponent } from '../../shared-components/footer/footer'; // Import footer component if needed
 
 @Component({
   selector: 'app-admin-report',
@@ -20,7 +22,9 @@ import { CommonModule } from '@angular/common'; // Explicitly import CommonModul
     MatButtonModule,
     MatTableModule,
     MatSnackBarModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    AdminHeader, // Include the admin header component
+    FooterComponent // Include the footer component if needed
   ],
   templateUrl: './report.html', // Assuming the HTML file is now named 'report.html'
   styleUrls: ['./report.css'] // Ensure this path is correct
@@ -51,14 +55,14 @@ export class AdminReportComponent implements OnInit {
         this.allReports = res; // Store the complete list
         this.reports = res;    // Initialize displayed reports with all reports
       },
-      err => this.snackBar.open('Error loading all reports', 'Close', { duration: 3000 })
+      err => this.snackBar.open('No reports found to load', 'Close', { duration: 3000 })
     );
   }
 
   loadTopper(): void {
     this.reportService.getTopper().subscribe(
       res => this.topper = res,
-      err => this.snackBar.open('Error fetching topper', 'Close', { duration: 3000 })
+     err => this.snackBar.open('Topper not declared yet', 'Close', { duration: 3000 })
     );
   }
 

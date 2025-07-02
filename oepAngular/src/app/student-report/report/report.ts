@@ -10,7 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; // Explicitly import CommonModule
 import { MatTableModule } from '@angular/material/table';
 import { QuestionService } from '../../services/question/question-service';
-
+import { FooterComponent } from '../../shared-components/footer/footer';
+import { UserHeaderComponent } from '../../shared-components/user-header/user-header';
 @Component({
   selector: 'app-student-reports',
   standalone: true,
@@ -22,7 +23,9 @@ import { QuestionService } from '../../services/question/question-service';
     MatButtonModule,
     MatSnackBarModule,
     MatTableModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    UserHeaderComponent, // Include the user header component
+    FooterComponent // Include the footer component if needed
   ],
   templateUrl: './report.html',
   styleUrl: './report.css'

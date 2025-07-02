@@ -51,10 +51,13 @@ export const appRoutes: Routes = [
   {
     path: 'reports',
     component: StudentReportsComponent,
-    // canActivate: [AuthGuard],
-    // data: { role: 'STUDENT' }
   },
-  {path:'manage-users',component:ManageUsersComponent},
+
+  {path:'manage-users',
+    component:ManageUsersComponent,
+    canActivate: [AuthGuard],
+    data: { role: 'ADMIN' }
+  },
   { path: 'exams', component: ExamsComponent },
   { path: 'exam/:id', component: ExamAttemptComponent },
   { path: 'results', component: ResultsComponent },
@@ -68,7 +71,9 @@ export const appRoutes: Routes = [
 },
 {
   path: 'question-bank',
-  component: QuestionBankComponent
+  component: QuestionBankComponent,
+  canActivate: [AuthGuard],
+  data: { role: 'ADMIN' },
 },
 
 { path: 'results', component: ResultsComponent }, 
