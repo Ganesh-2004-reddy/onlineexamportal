@@ -10,6 +10,7 @@ import { RoleService } from '../services/role/role-service';
 import { AdminHeader } from '../shared-components/admin-header/admin-header';
 import { FooterComponent } from '../shared-components/footer/footer';
 
+
 @Component({
   selector: 'app-manage-users',
   standalone: true,
@@ -62,18 +63,5 @@ export class ManageUsersComponent implements OnInit {
     });
   }
 
-  // Delete user
-  deleteUser(userId: number) {
-    if (confirm('Are you sure you want to delete this user?')) {
-      this.roleService.deleteUser(userId).subscribe({
-        next: () => {
-          this.users = this.users.filter((user) => user.userId !== userId); // Remove user from the list
-          this.snackBar.open('User deleted successfully', 'Close', { duration: 3000 });
-        },
-        error: (err) => {
-          this.snackBar.open('Failed to delete user: ' + err.message, 'Close', { duration: 3000 });
-        }
-      });
-    }
-  }
+  
 }

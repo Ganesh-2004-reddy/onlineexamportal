@@ -29,7 +29,6 @@ import{ FooterComponent } from '../../shared-components/footer/footer';
     MatSelectModule,
     MatInputModule,
     MatDialogModule,
-    RouterLink,
     FormsModule,
     HttpClientModule,
     AddEditQuestionDialogComponent,

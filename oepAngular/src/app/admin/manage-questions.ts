@@ -17,7 +17,6 @@ import { FooterComponent } from '../shared-components/footer/footer';
   selector: 'app-manage-questions',
   standalone: true,
   imports: [
-    MatToolbar,
     MatCard,
     MatCardContent,
     MatCardTitle,

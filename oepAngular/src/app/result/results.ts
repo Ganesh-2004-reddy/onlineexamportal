@@ -1,7 +1,4 @@
-// import { Component, OnInit } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { ResultService, ResponseSummary } from '../services/result-service';
-// import { ActivatedRoute } from '@angular/router';
+
  import { MatCard } from '@angular/material/card';
  import { MatCardContent } from '@angular/material/card';
  import { MatCardTitle } from '@angular/material/card';
@@ -26,7 +23,7 @@ export class ResultsComponent implements OnInit {
   examId!: number;
   userId!: number;
   isLoading = true;
-  examDetails!: Exam;
+  examDetails?: Exam;
   totalMarks = 0;
 
   // final structure: [{ question: Question, response: ResponseSummaryDTO }]
@@ -54,29 +51,7 @@ export class ResultsComponent implements OnInit {
     this.loadResults();
   }
 
-  // loadResults() {
-  //   this.resultService.getResult(this.examId, this.userId).subscribe({
-  //     next: (responses) => {
-  //       const fetches = responses.map(response =>
-  //         this.questionService.getQuestionById(response.questionId).toPromise().then(question => ({
-  //           question,
-  //           response
-  //         }))
-  //       );
-
-  //       Promise.all(fetches).then(results => {
-  //         this.detailedResults = results;
-  //         this.totalMarks = results.reduce((sum, r) => sum + (r.response.marksObtained || 0), 0);
-  //         this.loadExamDetails(); // load exam info like title, duration
-  //       });
-  //     },
-  //     error: err => {
-  //       alert('Failed to load results: ' + err.message);
-  //       this.isLoading = false;
-  //     }
-  //   });
-  // }
-
+ 
   loadResults() {
   this.resultService.getResult(this.examId, this.userId).subscribe({
     next: (responses) => {
