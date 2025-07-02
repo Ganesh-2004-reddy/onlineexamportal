@@ -31,9 +31,6 @@ export class RoleService {
     return this.http.put<void>(`${this.baseUrl}/admin/users/${userId}/role?role=${newRole}`, null);
   }
 
-  // Delete user
-  deleteUser(userId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/admin/users/${userId}`);
-  }
+  
 }
 
