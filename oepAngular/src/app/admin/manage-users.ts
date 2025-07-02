@@ -7,6 +7,8 @@ import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar'; // For notifications
 import { RoleService } from '../services/role/role-service';
+import { AdminHeader } from '../shared-components/admin-header/admin-header';
+import { FooterComponent } from '../shared-components/footer/footer';
 
 @Component({
   selector: 'app-manage-users',
@@ -17,7 +19,9 @@ import { RoleService } from '../services/role/role-service';
     MatSelectModule,
     MatButtonModule,
     MatCardModule,
-    FormsModule
+    FormsModule,
+    AdminHeader,
+    FooterComponent
   ],
   templateUrl: './manage-users.html',
   styleUrls: ['./manage-users.css']
