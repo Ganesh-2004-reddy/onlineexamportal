@@ -1,14 +1,3 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-register',
-//   imports: [],
-//   templateUrl: './register.html',
-//   styleUrl: './register.css'
-// })
-// export class Register {
-
-// }
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -46,6 +35,7 @@ export class RegisterComponent {
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     });
+    
   }
 
   onSubmit() {
