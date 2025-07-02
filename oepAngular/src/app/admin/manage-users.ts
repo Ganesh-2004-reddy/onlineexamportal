@@ -7,6 +7,9 @@ import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar'; // For notifications
 import { RoleService } from '../services/role/role-service';
+import { AdminHeader } from '../shared-components/admin-header/admin-header';
+import { FooterComponent } from '../shared-components/footer/footer';
+
 
 @Component({
   selector: 'app-manage-users',
@@ -17,7 +20,9 @@ import { RoleService } from '../services/role/role-service';
     MatSelectModule,
     MatButtonModule,
     MatCardModule,
-    FormsModule
+    FormsModule,
+    AdminHeader,
+    FooterComponent
   ],
   templateUrl: './manage-users.html',
   styleUrls: ['./manage-users.css']
@@ -58,18 +63,5 @@ export class ManageUsersComponent implements OnInit {
     });
   }
 
-  // Delete user
-  deleteUser(userId: number) {
-    if (confirm('Are you sure you want to delete this user?')) {
-      this.roleService.deleteUser(userId).subscribe({
-        next: () => {
-          this.users = this.users.filter((user) => user.userId !== userId); // Remove user from the list
-          this.snackBar.open('User deleted successfully', 'Close', { duration: 3000 });
-        },
-        error: (err) => {
-          this.snackBar.open('Failed to delete user: ' + err.message, 'Close', { duration: 3000 });
-        }
-      });
-    }
-  }
+  
 }

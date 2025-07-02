@@ -1,11 +1,9 @@
 package com.OnlineExamPortal.UserModule.Service;
 
 import com.OnlineExamPortal.UserModule.DTO.LoginDTO;
-import com.OnlineExamPortal.UserModule.DTO.ServiceTokenRequestDTO;
 import com.OnlineExamPortal.UserModule.DTO.UserDTO;
 import com.OnlineExamPortal.UserModule.DTO.UserRegistrationDTO;
 import com.OnlineExamPortal.UserModule.DTO.UserRequestDTO;
-//import com.OnlineExamPortal.UserModule.DTO.UserResponseDTO;
 import com.OnlineExamPortal.UserModule.Exception.CustomException;
 import com.OnlineExamPortal.UserModule.Model.Role;
 import com.OnlineExamPortal.UserModule.Model.User;
@@ -169,6 +167,23 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new CustomException("User not found"));
         return requestToDTO(user);
     }
+    
+    @Override
+    public UserRequestDTO getUserProfileById(Integer id)
+    {
+    	Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            return null;
+        }
+
+        User user = userOptional.get();
+        return new UserRequestDTO(
+        		user.getUserId(),
+        		user.getName(),
+            user.getEmail(),
+            user.getRole()
+        		);
+    }
 
     /**
      * Updates user details by ID.
@@ -195,7 +210,6 @@ public class UserServiceImpl implements UserService {
     }
 	
     /**
-     * Assigns a new role to a user. This operation is typically restricted to ADMIN users.
      * @param userId The ID of the user whose role is to be updated.
      * @param role The new role to assign.
      * @throws CustomException if the user is not found.
@@ -209,53 +223,9 @@ public class UserServiceImpl implements UserService {
 
         // Update the user's role
         user.setRole(role);
-        userRepository.save(user); // Save the updated user
+        userRepository.save(user); 
         
     }
-
-    /**
-     * Generates a service-to-service token for internal clients (like admin-service).
-     * This method authenticates the client using a predefined client ID and secret.
-     * If valid, it generates an ADMIN-level JWT token.
-     * @param requestDTO Contains the client ID and client secret.
-     * @return UserDTO containing the service token.
-     * @throws CustomException if client credentials are invalid.
-     */
-    
-    @Override
-    public UserDTO generateServiceToken(ServiceTokenRequestDTO requestDTO) {
-        // Hardcoded service client credentials for simplicity. In production, manage these securely.
-        final String ADMIN_SERVICE_CLIENT_ID = "admin-service-client";
-        final String ADMIN_SERVICE_CLIENT_SECRET = "superSecretAdminServicePassword123";
-
-        // Validate client credentials
-        if (!ADMIN_SERVICE_CLIENT_ID.equals(requestDTO.getClientId()) ||
-            !ADMIN_SERVICE_CLIENT_SECRET.equals(requestDTO.getClientSecret())) {
-            throw new CustomException("Invalid client credentials for service token generation.");
-        }
-
-        // For service tokens, we can create a dummy UserDetails object for token generation
-        // Or fetch a specific "service account" user from DB if it exists.
-        // For simplicity, let's create a temporary User object with ADMIN role for token generation.
-        User serviceAccountUser = new User();
-        serviceAccountUser.setEmail(ADMIN_SERVICE_CLIENT_ID + "@service.com"); // Use client ID as email for subject
-        serviceAccountUser.setRole(Role.ADMIN); // Ensure service token has ADMIN role
-
-        // Generate JWT token
-        String token = jwtUtil.generateToken(
-                new org.springframework.security.core.userdetails.User(
-                        serviceAccountUser.getEmail(), "", // Password not needed for service account UserDetails
-                        List.of(() -> "ROLE_" + serviceAccountUser.getRole().name())
-                )
-        );
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setToken(token);
-        userDTO.setEmail(serviceAccountUser.getEmail());
-        userDTO.setRole(serviceAccountUser.getRole());
-        return userDTO;
-    }
-
 
     /**
      * Helper method to convert a User entity to a UserDTO.
@@ -289,24 +259,7 @@ public class UserServiceImpl implements UserService {
         return dto;
     }
     
-    
-    @Override
-    public UserRequestDTO getUserProfileById(Integer id)
-    {
-    	Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty()) {
-            return null;
-        }
 
-        User user = userOptional.get();
-        // Map User entity to UserResponseDTO
-        return new UserRequestDTO(
-        		user.getUserId(),
-        		user.getName(),
-            user.getEmail(),
-            user.getRole()
-        		);
-    }
     
     
 }

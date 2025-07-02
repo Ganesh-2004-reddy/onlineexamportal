@@ -9,5 +9,15 @@
     <button mat-button (click)="goToManageExams()">Manage Exams</button>
     <button mat-button (click)="goToManageQuestions()">Manage Questions</button>
     <button mat-button (click)="goToReports()">View Reports</button>
+    <button mat-icon-button [matMenuTriggerFor]="profileMenu">
+      <img src="/user-profile.jpg" alt="User" class="avatar" />
+    </button>
+  
+  <mat-menu #profileMenu="matMenu">
+    <button mat-menu-item disabled>Name: {{ user?.name }}</button>
+    <button mat-menu-item disabled>Email: {{ user?.email }}</button>
+    <button mat-menu-item (click)="openUpdateProfileDialog()">Update Profile</button>
+    <button mat-menu-item (click)="logout()">Logout</button>
+  </mat-menu>
     </div>
   </mat-toolbar>

@@ -35,5 +35,8 @@ export class UserService {
   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   return this.http.put(`${this.baseUrl}/${userData.userId}`, userData,{ headers });
 }
+deleteProfile(userId: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/delete/${userId}`);
+}
 
 }

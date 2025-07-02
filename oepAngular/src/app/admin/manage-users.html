@@ -1,3 +1,4 @@
+<app-admin-header></app-admin-header>
 <mat-card>
   <mat-card-title>Manage User Roles</mat-card-title>
   <mat-card-content>
@@ -30,7 +31,6 @@
         <th mat-header-cell *matHeaderCellDef>Action</th>
         <td mat-cell *matCellDef="let user">
           <button mat-raised-button color="primary" (click)="updateRole(user.userId, user.role)">Update</button>
-          <button mat-raised-button color="warn" (click)="deleteUser(user.userId)">Delete</button>
         </td>
       </ng-container>
 
@@ -39,3 +39,4 @@
     </table>
   </mat-card-content>
 </mat-card>
+<app-footer></app-footer>

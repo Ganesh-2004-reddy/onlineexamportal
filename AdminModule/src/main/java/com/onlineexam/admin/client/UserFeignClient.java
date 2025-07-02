@@ -29,7 +29,4 @@ public interface UserFeignClient {
     @PutMapping("/user/{id}/role")
     ResponseEntity<String> assignRoleToUser(@PathVariable("id") Integer id, @RequestParam("role") String role);
 
-    // You can add other methods here if the Admin Service needs to call other User Service endpoints, e.g.:
-    // @GetMapping("/examProtal/userModule/{id}/profile")
-    // UserResponseDTO getUserProfile(@PathVariable("id") Integer id);
 }
