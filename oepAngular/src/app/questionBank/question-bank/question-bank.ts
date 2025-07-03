@@ -31,7 +31,7 @@ import{ FooterComponent } from '../../shared-components/footer/footer';
     MatDialogModule,
     FormsModule,
     HttpClientModule,
-    AddEditQuestionDialogComponent,
+    // AddEditQuestionDialogComponent,
     AdminHeader,
     FooterComponent
   ],

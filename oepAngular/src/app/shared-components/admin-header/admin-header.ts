@@ -66,7 +66,8 @@ export class AdminHeader {
     }
   
     logout(): void {
-      localStorage.removeItem('token');
+      localStorage.clear();
+      //localStorage.removeItem('token');
       this.router.navigate(['/login']);
     }
   

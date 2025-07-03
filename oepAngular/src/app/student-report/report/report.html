@@ -24,16 +24,47 @@
   </div>
 
   <!-- Reports Section -->
-  <div class="report-list">
-    <mat-card *ngFor="let report of studentReports" class="report-card">
-      <mat-card-title>Exam ID: {{ report.examId }}</mat-card-title>
-      <mat-card-content>
-        <p><strong>Exam Title:</strong> {{ report.examTitle }}</p>
-        <p><strong>Marks Obtained:</strong> {{ report.marksObtained }}</p>
-        <p><strong>Max Marks:</strong> {{ report.maxMarks }}</p>
-        <p><strong>Performance:</strong> {{ report.performanceMetrics }}</p>
-      </mat-card-content>
-    </mat-card>
-  </div>
+  <mat-card>
+    <h3>All Reports</h3>
+    <table mat-table [dataSource]="studentReports" class="mat-elevation-z8">
+      <!-- Exam ID Column -->
+      <ng-container matColumnDef="examId">
+        <th mat-header-cell *matHeaderCellDef>Exam ID</th>
+        <td mat-cell *matCellDef="let report">{{ report.examId }}</td>
+      </ng-container>
+
+      <!-- Exam Title Column -->
+      <ng-container matColumnDef="examTitle">
+        <th mat-header-cell *matHeaderCellDef>Exam Title</th>
+        <td mat-cell *matCellDef="let report">{{ report.examTitle }}</td>
+      </ng-container>
+
+      <!-- Marks Obtained Column -->
+      <ng-container matColumnDef="marksObtained">
+        <th mat-header-cell *matHeaderCellDef>Marks Obtained</th>
+        <td mat-cell *matCellDef="let report">{{ report.marksObtained }}</td>
+      </ng-container>
+
+      <!-- Max Marks Column -->
+      <ng-container matColumnDef="maxMarks">
+        <th mat-header-cell *matHeaderCellDef>Max Marks</th>
+        <td mat-cell *matCellDef="let report">{{ report.maxMarks }}</td>
+      </ng-container>
+
+      <!-- Performance Metrics Column -->
+      <ng-container matColumnDef="performanceMetrics">
+        <th mat-header-cell *matHeaderCellDef>Performance</th>
+        <td mat-cell *matCellDef="let report">{{ report.performanceMetrics }}</td>
+      </ng-container>
+
+      <!-- Table Rows -->
+      <tr mat-header-row *matHeaderRowDef="['examId', 'examTitle', 'marksObtained', 'maxMarks', 'performanceMetrics']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['examId', 'examTitle', 'marksObtained', 'maxMarks', 'performanceMetrics'];"></tr>
+    </table>
+    <div *ngIf="studentReports.length === 0" class="no-records-message">
+      No reports found matching the criteria.
+    </div>
+  </mat-card>
 </div>
+
 <app-footer></app-footer>
