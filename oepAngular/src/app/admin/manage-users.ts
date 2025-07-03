@@ -5,7 +5,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar'; // For notifications
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoleService } from '../services/role/role-service';
 import { AdminHeader } from '../shared-components/admin-header/admin-header';
 import { FooterComponent } from '../shared-components/footer/footer';
@@ -28,8 +28,8 @@ import { FooterComponent } from '../shared-components/footer/footer';
   styleUrls: ['./manage-users.css']
 })
 export class ManageUsersComponent implements OnInit {
-  roles = ['ADMIN', 'STUDENT', 'EXAMINER']; // Available roles
-  users: any[] = []; // List of users
+  roles = ['ADMIN', 'STUDENT', 'EXAMINER'];
+  users: any[] = [];
 
   constructor(private roleService: RoleService, private snackBar: MatSnackBar) {}
 
@@ -54,7 +54,7 @@ export class ManageUsersComponent implements OnInit {
     this.roleService.updateUserRole(userId, newRole).subscribe({
       next: () => {
         const user = this.users.find((u) => u.userId === userId);
-        if (user) user.role = newRole; // Update the role locally
+        if (user) user.role = newRole; 
         this.snackBar.open(`Role updated successfully for user ID ${userId}`, 'Close', { duration: 3000 });
       },
       error: (err) => {

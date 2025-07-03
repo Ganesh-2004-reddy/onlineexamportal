@@ -156,10 +156,9 @@ export class QuestionBankComponent implements OnInit {
 
     this.questionService.uploadCSV(formData).subscribe({
       next: () => {
-        alert('CSV uploaded successfully');
+        window.location.reload(); 
         this.loadQuestions();
-      },
-      error: err => alert('Upload failed: ' + err.message)
+      }
     });
   }
 }

@@ -67,9 +67,9 @@ public class QuestionController {
 		}
 	try {
 		qbService.saveQuestionsFromFile(file);	
-		return ResponseEntity.ok("File uploaded and data saved successfully.");
+		throw new CustomException("File Uploaded completed");
 	} catch (Exception e) {
-		return ResponseEntity.badRequest().body("Error processing file: " + e.getMessage());
+		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 }
 

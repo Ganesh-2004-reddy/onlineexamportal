@@ -1,14 +1,3 @@
-// import { Injectable } from '@angular/core';
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class UserService {
-
-//   constructor() { }
-// }
-
-
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -23,7 +12,7 @@ export interface UserProfile {
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private baseUrl = 'http://localhost:8090/examPortal/userModule'; // adjust as needed
+  private baseUrl = 'http://localhost:8090/examPortal/userModule'; 
 
   constructor(private http: HttpClient) {}
 
@@ -32,11 +21,8 @@ export class UserService {
   }
  updateUser(userData: any): Observable<any> {
   const token = localStorage.getItem('token');
-  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  return this.http.put(`${this.baseUrl}/${userData.userId}`, userData,{ headers });
-}
-deleteProfile(userId: number): Observable<any> {
-  return this.http.delete(`${this.baseUrl}/delete/${userId}`);
+ // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.put(`${this.baseUrl}/${userData.userId}`, userData);
 }
 
 }

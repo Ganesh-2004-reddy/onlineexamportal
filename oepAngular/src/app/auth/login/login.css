@@ -1,23 +1,22 @@
 .split-container {
-  display: flex; /* Use flexbox to arrange the halves side-by-side */
-  height: 100vh; /* Make the container take full viewport height */
-  overflow: hidden; /* Hide any overflow */
+  display: flex;
+  height: 100vh;
+  overflow: hidden; 
 }
  
 .image-half {
-  flex: 1; /* Takes up 50% of the width */
- /* background: url('https://via.placeholder.com/1000x800/4CAF50/FFFFFF?text=Exam+Success') no-repeat center center / cover;*/
-  position: relative; /* For positioning the overlay */
-  display: flex; /* For centering content within the image */
+  flex: 1;
+  position: relative; 
+  display: flex; 
   justify-content: center;
   align-items: center;
-  color: white; /* Text color for overlay */
+  color: white; 
   text-align: center;
   background-color: aquamarine;
 }
  
 .image-overlay {
-  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+  background-color: rgba(0, 0, 0, 0.4); 
   padding: 20px;
   border-radius: 8px;
 }

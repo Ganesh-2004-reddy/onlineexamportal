@@ -16,16 +16,16 @@ import { UserHeaderComponent } from '../../shared-components/user-header/user-he
   selector: 'app-student-reports',
   standalone: true,
   imports: [
-    CommonModule, // Required for *ngIf
-    FormsModule,  // Required for [(ngModel)]
+    CommonModule,
+    FormsModule,
     MatCardModule,
     MatInputModule,
     MatButtonModule,
     MatSnackBarModule,
     MatTableModule,
     MatFormFieldModule,
-    UserHeaderComponent, // Include the user header component
-    FooterComponent // Include the footer component if needed
+    UserHeaderComponent,
+    FooterComponent 
   ],
   templateUrl: './report.html',
   styleUrl: './report.css'

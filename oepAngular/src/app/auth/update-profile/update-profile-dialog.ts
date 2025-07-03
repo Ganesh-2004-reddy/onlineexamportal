@@ -35,8 +35,8 @@ export class UpdateProfileDialogComponent implements OnInit {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: [''],
-      confirmPassword: ['']
+      password: ['',[Validators.required,Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required]
     });
   }
 

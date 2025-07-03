@@ -4,11 +4,11 @@ import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 
-export interface JwtPayload {
-  sub: string;
-  exp: number;
-  roles: string[]; // assuming backend sends ["ROLE_ADMIN"], ["ROLE_STUDENT"], etc.
-}
+// export interface JwtPayload {
+//   sub: string;
+//   exp: number;
+//   roles: string[];
+// }
 
 @Injectable({
   providedIn: 'root'
@@ -51,23 +51,23 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  decodeToken(): any {
-    const token = this.getToken();
-    if (!token) return null;
+  // decodeToken(): any {
+  //   const token = this.getToken();
+  //   if (!token) return null;
 
-    const payload = token.split('.')[1];
-    return JSON.parse(atob(payload));
-  }
+  //   const payload = token.split('.')[1];
+  //   return JSON.parse(atob(payload));
+  // }
 
-  getLoggedInUserId(): number | null {
-    const decoded = this.decodeToken();
-    return decoded ? +decoded.sub : null; // assuming 'sub' is userId or email
-  }
+  // getLoggedInUserId(): number | null {
+  //   const decoded = this.decodeToken();
+  //   return decoded ? +decoded.sub : null;
+  // }
 
-  getLoggedInEmail(): string | null {
-    const decoded = this.decodeToken();
-    return decoded ? decoded.sub : null;
-  }
+  // getLoggedInEmail(): string | null {
+  //   const decoded = this.decodeToken();
+  //   return decoded ? decoded.sub : null;
+  // }
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');

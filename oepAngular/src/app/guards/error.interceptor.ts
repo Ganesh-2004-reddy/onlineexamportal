@@ -1,5 +1,3 @@
-// src/app/interceptors/error.interceptor.ts
-
 import {
   HttpInterceptorFn,
   HttpRequest,
@@ -16,6 +14,12 @@ export const errorInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next:
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let errorMsg = 'An unexpected error occurred.';
+      
+
+      if (error.status === 400 && error.error?.errors) {
+         return throwError(() => ({ validationErrors: error.error.errors }));
+     }
+        
 
       if (error.error instanceof ErrorEvent) {
         errorMsg = `Client Error: ${error.error.message}`;

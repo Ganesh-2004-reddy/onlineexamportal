@@ -37,7 +37,7 @@ public class UserController {
      * @return ResponseEntity with the registered user's details and 200 OK status.
      */
     
-    @PostMapping("/register") // Maps HTTP POST requests to /examProtal/userModule/register
+    @PostMapping("/register")
     public ResponseEntity<UserDTO> registerNewUser(@Valid @RequestBody UserRegistrationDTO registrationDTO) {
         UserDTO registeredUser = userService.registerUser(registrationDTO);
         return ResponseEntity.ok(registeredUser);
