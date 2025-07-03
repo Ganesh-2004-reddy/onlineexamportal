@@ -47,7 +47,9 @@ export class ExaminerHeaderComponent {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    localStorage.clear();
+    // Optionally, you can clear the token if it's stored separately
+   // localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 
