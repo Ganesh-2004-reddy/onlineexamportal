@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -21,7 +20,6 @@ export class UserService {
   }
  updateUser(userData: any): Observable<any> {
   const token = localStorage.getItem('token');
- // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   return this.http.put(`${this.baseUrl}/${userData.userId}`, userData);
 }
 

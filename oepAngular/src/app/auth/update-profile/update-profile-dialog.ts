@@ -33,12 +33,14 @@ export class UpdateProfileDialogComponent implements OnInit {
     private authService: AuthService
   ) {
     this.profileForm = this.fb.group({
-      name: ['', Validators.required],
+      name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['',[Validators.required,Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required]
-    });
-  }
+      password: ['', [
+        Validators.minLength(8),
+      ]],
+      confirmPassword: ['']
+    }, { validator: this.passwordMatchValidator });
+  } 
 
   ngOnInit(): void {
     const userId = localStorage.getItem('userId');
@@ -52,6 +54,12 @@ export class UpdateProfileDialogComponent implements OnInit {
         }
       });
     }
+  }
+
+  private passwordMatchValidator(g: FormGroup) {
+    const password = g.get('password')?.value;
+    const confirmPassword = g.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { 'passwordMismatch': true };
   }
 
   onSave() {

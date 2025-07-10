@@ -4,12 +4,6 @@ import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 
-// export interface JwtPayload {
-//   sub: string;
-//   exp: number;
-//   roles: string[];
-// }
-
 @Injectable({
   providedIn: 'root'
 })
@@ -49,25 +43,7 @@ export class AuthService {
 
   getToken() {
     return localStorage.getItem('token');
-  }
-
-  // decodeToken(): any {
-  //   const token = this.getToken();
-  //   if (!token) return null;
-
-  //   const payload = token.split('.')[1];
-  //   return JSON.parse(atob(payload));
-  // }
-
-  // getLoggedInUserId(): number | null {
-  //   const decoded = this.decodeToken();
-  //   return decoded ? +decoded.sub : null;
-  // }
-
-  // getLoggedInEmail(): string | null {
-  //   const decoded = this.decodeToken();
-  //   return decoded ? decoded.sub : null;
-  // }
+  } 
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');

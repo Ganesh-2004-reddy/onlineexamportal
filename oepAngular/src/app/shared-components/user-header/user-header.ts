@@ -48,7 +48,6 @@ export class UserHeaderComponent {
 
   logout(): void {
     localStorage.clear();
-    //localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 

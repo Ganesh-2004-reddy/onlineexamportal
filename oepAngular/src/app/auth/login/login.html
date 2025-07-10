@@ -10,7 +10,7 @@
     <mat-card>
       <h2>Login</h2>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline">
+        <!-- <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email" required />
           <mat-error *ngIf="loginForm.controls['email'].hasError('required') && loginForm.controls['email'].touched">
@@ -26,6 +26,25 @@
           <input matInput formControlName="password" type="password" required />
           <mat-error *ngIf="loginForm.controls['password'].hasError('required') && loginForm.controls['password'].touched">
             Password is required
+          </mat-error>
+        </mat-form-field> -->
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" required />
+          <mat-error *ngIf="loginForm.get('email')?.errors && loginForm.get('email')?.touched">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email address</span>
+          </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" required />
+          <mat-error *ngIf="loginForm.get('password')?.errors && loginForm.get('password')?.touched">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">
+              Password must be at least 8 characters long
+            </span>
           </mat-error>
         </mat-form-field>
  

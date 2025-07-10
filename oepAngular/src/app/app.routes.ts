@@ -35,6 +35,8 @@ export const appRoutes: Routes = [
  {
     path:'admin/manage-exams',
     component:ManageExamsComponent,
+    canActivate: [AuthGuard],
+    data: { role: 'ADMIN' }
  },
   {
     path: 'student-home',
@@ -58,16 +60,20 @@ export const appRoutes: Routes = [
     canActivate: [AuthGuard],
     data: { role: 'ADMIN' }
   },
+
   { path: 'exams', component: ExamsComponent },
   { path: 'exam/:id', component: ExamAttemptComponent },
   { path: 'results', component: ResultsComponent },
+
   {
   path: 'results/:examId',
   component: ResultsComponent
 },
   {
   path: 'admin/questions/:examId',
-  component: ManageQuestionsComponent
+  component: ManageQuestionsComponent,
+  canActivate: [AuthGuard],
+  data: { role: 'ADMIN' }
 },
 {
   path: 'question-bank',
@@ -84,9 +90,18 @@ export const appRoutes: Routes = [
   canActivate: [AuthGuard],
   data: { role: 'EXAMINER' } 
 },
-{ path: 'examiner/students', component: ViewStudentsComponent },
-{ path: 'examiner/exams', component: ViewExamsComponent },
-{ path: 'examiner/reports', component: ViewReportComponent }           
+{ path: 'examiner/students', component: ViewStudentsComponent,
+  canActivate: [AuthGuard],
+  data: { role: 'EXAMINER' } 
+ },
+{ path: 'examiner/exams', component: ViewExamsComponent,
+  canActivate: [AuthGuard],
+  data: { role: 'EXAMINER' } 
+ },
+{ path: 'examiner/reports', component: ViewReportComponent,
+  canActivate: [AuthGuard],
+  data: { role: 'EXAMINER' } 
+ }           
 
 
 ];

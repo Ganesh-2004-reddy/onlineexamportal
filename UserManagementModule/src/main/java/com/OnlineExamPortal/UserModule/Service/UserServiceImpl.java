@@ -4,14 +4,17 @@ import com.OnlineExamPortal.UserModule.DTO.LoginDTO;
 import com.OnlineExamPortal.UserModule.DTO.UserDTO;
 import com.OnlineExamPortal.UserModule.DTO.UserRegistrationDTO;
 import com.OnlineExamPortal.UserModule.DTO.UserRequestDTO;
+import com.OnlineExamPortal.UserModule.Exception.ConfirmPasswordNotMatchException;
 import com.OnlineExamPortal.UserModule.Exception.CustomException;
+import com.OnlineExamPortal.UserModule.Exception.EmailAlreadyExistsException;
+import com.OnlineExamPortal.UserModule.Exception.InvalidCredentialsException;
+import com.OnlineExamPortal.UserModule.Exception.UserNotFoundException;
 import com.OnlineExamPortal.UserModule.Model.Role;
 import com.OnlineExamPortal.UserModule.Model.User;
 import com.OnlineExamPortal.UserModule.Repository.UserRepository;
 import com.OnlineExamPortal.UserModule.config.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -57,18 +60,17 @@ public class UserServiceImpl implements UserService {
      * @throws CustomException if a user with the email already exists or passwords don't match.
      */
     
-    @Transactional
     @Override
     public UserDTO registerUser(UserRegistrationDTO registrationDTO) {
         if (userRepository.findByEmail(registrationDTO.getEmail()).isPresent()) {
-            throw new CustomException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
         String password = registrationDTO.getPassword();
         String confirmPassword = registrationDTO.getConfirmPassword();
 
         if (password == null || confirmPassword == null || !password.equals(confirmPassword)) {
-            throw new CustomException("Password and confirm password do not match");
+            throw new ConfirmPasswordNotMatchException("Password and confirm password do not match");
         }
 
         User user = new User();
@@ -95,7 +97,6 @@ public class UserServiceImpl implements UserService {
      * @throws CustomException if authentication fails (e.g., bad credentials).
      */
     
-    @Transactional(readOnly = true)
     @Override
     public UserDTO loginUser(LoginDTO loginDTO) {
         try {
@@ -107,7 +108,7 @@ public class UserServiceImpl implements UserService {
             // If authentication is successful, get the authenticated User
             if (authentication.isAuthenticated()) {
                 User user = userRepository.findByEmail(loginDTO.getEmail())
-                        .orElseThrow(() -> new CustomException("User not found after authentication "));
+                        .orElseThrow(() -> new UserNotFoundException("User not found after authentication "));
 
                 // Generate JWT token
                 UserDetails userDetails = new org.springframework.security.core.userdetails.User(
@@ -121,12 +122,12 @@ public class UserServiceImpl implements UserService {
                 userDTO.setToken(token); // Set the generated token
                 return userDTO;
             } else {
-                throw new CustomException("Invalid credentials");
+                throw new InvalidCredentialsException("Invalid credentials");
             }
 
         } catch (AuthenticationException e) {
             // Catch authentication specific exceptions (e.g., BadCredentialsException)
-            throw new CustomException("Invalid email or password.");
+            throw new InvalidCredentialsException("Invalid email or password.");
         } catch (Exception e) {
             // Catch any other unexpected exceptions
             System.err.println("Error during login: " + e.getMessage());
@@ -139,7 +140,6 @@ public class UserServiceImpl implements UserService {
      * @return A list of UserRequestDTOs.
      */
 
-    @Transactional(readOnly = true)
     @Override
     public List<UserRequestDTO> findAllUsers() {
         List<User> userList = userRepository.findAll();
@@ -160,11 +160,10 @@ public class UserServiceImpl implements UserService {
      * @throws CustomException if the user is not found.
      */
     
-    @Transactional(readOnly = true)
     @Override
     public UserRequestDTO getUserById(Integer userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         return requestToDTO(user);
     }
     
@@ -193,11 +192,10 @@ public class UserServiceImpl implements UserService {
      * @throws CustomException if the user is not found.
      */
     
-    @Transactional
     @Override
     public UserDTO updateUser(Integer userId, UserRegistrationDTO dto) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
@@ -215,11 +213,10 @@ public class UserServiceImpl implements UserService {
      * @throws CustomException if the user is not found.
      */
     
-    @Transactional
     @Override
     public void assignRole(Integer userId, Role role) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // Update the user's role
         user.setRole(role);

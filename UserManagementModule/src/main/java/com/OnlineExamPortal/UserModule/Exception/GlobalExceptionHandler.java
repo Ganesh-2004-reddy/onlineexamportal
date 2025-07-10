@@ -28,6 +28,32 @@ public class GlobalExceptionHandler {
     	ErrorResponse error = new ErrorResponse(ex.getMessage());
     	return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
     }
+    
+	//Handles ConfirmPasswordNotMatchException
+    @ExceptionHandler(ConfirmPasswordNotMatchException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(ConfirmPasswordNotMatchException ex){
+    	ErrorResponse error = new ErrorResponse(ex.getMessage());
+    	return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+    }
+    
+  //Handles UserNotFoundException
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(UserNotFoundException ex){
+    	ErrorResponse error = new ErrorResponse(ex.getMessage());
+    	return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+    }
+  //Handles EmailNotFoundException
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(EmailAlreadyExistsException ex){
+    	ErrorResponse error = new ErrorResponse(ex.getMessage());
+    	return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+    }
+  //Handles InvalidCredentialsException
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(InvalidCredentialsException ex){
+    	ErrorResponse error = new ErrorResponse(ex.getMessage());
+    	return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+    }
 
     //Handles MethodArgumentNotValidException
     @ExceptionHandler(MethodArgumentNotValidException.class)

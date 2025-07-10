@@ -30,12 +30,17 @@ export class RegisterComponent {
   errorMessage: string = '';
   constructor(private fb: FormBuilder, private auth: AuthService, private router:Router) {
     this.registerForm = this.fb.group({
-      name: ['', Validators.required],
+      name: ['',[Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required,Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required]
-    });
-    
+      confirmPassword: ['']
+    }, { validator: this.passwordMatchValidator });
+  }
+
+  private passwordMatchValidator(g: FormGroup) {
+    const password = g.get('password')?.value;
+    const confirmPassword = g.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { 'passwordMismatch': true };
   }
 
   onSubmit() {

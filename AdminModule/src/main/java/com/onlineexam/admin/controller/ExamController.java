@@ -48,26 +48,7 @@ public class ExamController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-/*
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteExam(@PathVariable Integer id) {
-        try {
-            // First, delete the exam
-        	mappingFeignClient.deleteMappingsByExamId(id);
-            boolean deleted = examService.deleteExam(id);
 
-            if (deleted) {
-                // Then delete exam-question mappings
-                return ResponseEntity.ok("Exam with "+id+" deleted successfully");
-            } else {
-                return ResponseEntity.ok("Exam with "+id+" not deleted");
-            }
-
-        } catch (Exception e) {
-            return ResponseEntity.ok("Failed to delete exam or mappings: " + e.getMessage());
-        }
-    }
-    */
     @DeleteMapping("/{examId}")
     public ResponseEntity<String> deleteExam(@PathVariable Integer examId) {
         String message = examService.deleteExamById(examId);

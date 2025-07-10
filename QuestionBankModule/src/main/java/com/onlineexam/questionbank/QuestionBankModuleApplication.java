@@ -12,8 +12,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient; // Impo
  * @EnableDiscoveryClient registers this application with the Eureka Server.
  */
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-
-//@EnableMethodSecurity
 @EnableDiscoveryClient // Enables this Spring Boot application to act as a Eureka client
 public class QuestionBankModuleApplication {
 

@@ -43,11 +43,11 @@ public class AdminUserController {
             // Feign will handle the HTTP call to the User Service, including adding the token via interceptor.
             userFeignClient.assignRoleToUser(id, role);
             // Return 200 OK with no content to indicate successful operation.
-            return ResponseEntity.ok("Role updated");
+            throw new CustomException("Role updated ");
         } catch (Exception e) {
             // Catch any exceptions from Feign client (e.g., FeignClientException for HTTP errors)
             // You might want more specific error handling based on FeignClientException subtypes.
-            throw new CustomException("Failed to assign role via User Service: " + e.getMessage());
+            throw new CustomException(e.getMessage());
         }
     }
 }

@@ -1,25 +1,47 @@
-<h2>Update Profile</h2>
+<h2 mat-dialog-title>Update Profile</h2>
 <form [formGroup]="profileForm" (ngSubmit)="onSave()">
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Name</mat-label>
-    <input matInput formControlName="name" />
-  </mat-form-field>
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required />
+      <mat-error *ngIf="profileForm.get('name')?.errors && profileForm.get('name')?.touched">
+        <span *ngIf="profileForm.get('name')?.errors?.['required']">Name is required</span>
+        <span *ngIf="profileForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters</span>
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Email</mat-label>
-    <input matInput formControlName="email" />
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" required />
+      <mat-error *ngIf="profileForm.get('email')?.errors && profileForm.get('email')?.touched">
+        <span *ngIf="profileForm.get('email')?.errors?.['required']">Email is required</span>
+        <span *ngIf="profileForm.get('email')?.errors?.['email']">Please enter a valid email address</span>
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>New Password</mat-label>
-    <input matInput type="password" formControlName="password" />
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>New Password</mat-label>
+      <input matInput type="password" formControlName="password" />
+      <mat-icon matSuffix class="cursor-pointer"></mat-icon>
+      <mat-error *ngIf="profileForm.get('password')?.errors && profileForm.get('password')?.touched">
+        <span *ngIf="profileForm.get('password')?.errors?.['minlength']">
+          Password must be at least 8 characters long
+        </span>
+      </mat-error>
+      <mat-hint>Leave blank if you don't want to change password</mat-hint>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Confirm Password</mat-label>
-    <input matInput type="password" formControlName="confirmPassword" />
-  </mat-form-field>
-
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput type="password" formControlName="confirmPassword" />
+      <mat-icon matSuffix class="cursor-pointer"></mat-icon>
+      <mat-error *ngIf="profileForm.get('confirmPassword')?.errors && profileForm.get('confirmPassword')?.touched">
+        <span *ngIf="profileForm.get('confirmPassword')?.errors?.['passwordMismatch']">
+          Passwords do not match
+        </span>
+      </mat-error>
+    </mat-form-field>
+  </div>
   <div style="margin-top: 16px;">
     <button mat-raised-button color="primary" type="submit">Save</button>
     <button mat-button type="button" (click)="cancel()">Cancel</button>

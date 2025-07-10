@@ -5,29 +5,33 @@ import com.OnlineExamPortal.UserModule.DTO.LoginDTO;
 import com.OnlineExamPortal.UserModule.DTO.UserDTO;
 import com.OnlineExamPortal.UserModule.DTO.UserRegistrationDTO;
 import com.OnlineExamPortal.UserModule.DTO.UserRequestDTO;
-//import com.OnlineExamPortal.UserModule.DTO.UserResponseDTO;
 import com.OnlineExamPortal.UserModule.Exception.CustomException;
 import com.OnlineExamPortal.UserModule.Model.Role;
 import com.OnlineExamPortal.UserModule.Service.UserService;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * REST Controller for managing User resources.
  * Provides endpoints for user registration, login, profile management, and role assignment.
  */
 
-@RestController // Marks this class as a Spring REST Controller
-@RequestMapping("/user") // Base path for all endpoints in this controller
+@RestController
+@RequestMapping("/user")
 public class UserController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	
 	@Autowired
     private UserService userService;
     
@@ -39,7 +43,9 @@ public class UserController {
     
     @PostMapping("/register")
     public ResponseEntity<UserDTO> registerNewUser(@Valid @RequestBody UserRegistrationDTO registrationDTO) {
+    	logger.info("Registering new user with email: {}", registrationDTO.getEmail());
         UserDTO registeredUser = userService.registerUser(registrationDTO);
+        logger.debug("Registered user details: {}", registeredUser);
         return ResponseEntity.ok(registeredUser);
     }
 
@@ -51,35 +57,38 @@ public class UserController {
  
      */
     
-    @PostMapping("/login") // Maps HTTP POST requests to /examProtal/userModule/login
+    @PostMapping("/login")
     public ResponseEntity<UserDTO> loginUser(@RequestBody @Valid LoginDTO loginDTO) {
+    	logger.info("User login attempt with email: {}", loginDTO.getEmail());
         UserDTO user = userService.loginUser(loginDTO);
+        logger.debug("Login successful for user: {}", user);
         return ResponseEntity.ok(user);
     }
 
     /**
      * EndPoint to get all Users
-     * Only ADMIN can view all users
      * @return ResponseEntity with a list of UserRequestDTOs.
      */
     
     @GetMapping("/users")
-    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserRequestDTO>> findAllUsers() {
+    	logger.info("Fetching all users");
         List<UserRequestDTO> users = userService.findAllUsers();
+        logger.debug("Total users found: {}", users.size());
         return ResponseEntity.ok(users);
     }
 
     /**
      * EndPoint to get user by id
      * @param id The ID of the user whose profile is to be retrieved.
-     * @return ResponseEntity with the user's profile details if found (200 OK), or 404 Not Found if not.
+     * @return ResponseEntity with the user's profile details if found (200 OK).
      */
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
     public ResponseEntity<UserRequestDTO> getUserById(@PathVariable Integer id) {
+    	logger.info("Fetching user by ID: {}", id);
         UserRequestDTO user = userService.getUserById(id);
+        logger.debug("User details: {}", user);
         return ResponseEntity.ok(user);
     }
     
@@ -92,15 +101,15 @@ public class UserController {
      */
     
     @PutMapping("{id}")
-    //@PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Integer id, @RequestBody @Valid UserRegistrationDTO dto) {
+    	logger.info("Updating user with ID: {}", id);
         UserDTO updatedUser = userService.updateUser(id, dto);
+        logger.debug("Updated user details: {}", updatedUser);
         return ResponseEntity.ok(updatedUser);
     }
 
     /**
      * EndPoint to update the role of a user
-     * Only ADMIN can assign roles
      * @param id The ID of the user whose role is to be updated.
      * @param role The new role to assign (as a request parameter).
      * @return ResponseEntity with a success message and 200 OK status.
@@ -108,10 +117,10 @@ public class UserController {
      */
     
     @PutMapping("/{id}/role")
-    //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> assignRoleToUser(@PathVariable Integer id, @RequestParam Role role) {
-        userService.assignRole(id, role);
-        return ResponseEntity.ok().build();   
+    public void assignRoleToUser(@PathVariable Integer id, @RequestParam Role role) {
+    	logger.info("Assigning role '{}' to user with ID: {}", role, id);
+        userService.assignRole(id, role);  
+        logger.debug("Role assignment successful");
     }
     /***
      * 
@@ -120,6 +129,9 @@ public class UserController {
      */
     @GetMapping("/{id}/profile")
     public UserRequestDTO getUserProfileById(@PathVariable Integer id) {
+    	logger.info("Fetching profile for user ID: {}", id);
     	return userService.getUserProfileById(id);
     }
 }
+
+

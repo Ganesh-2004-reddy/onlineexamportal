@@ -56,9 +56,6 @@ export class ManageUsersComponent implements OnInit {
         const user = this.users.find((u) => u.userId === userId);
         if (user) user.role = newRole; 
         this.snackBar.open(`Role updated successfully for user ID ${userId}`, 'Close', { duration: 3000 });
-      },
-      error: (err) => {
-        this.snackBar.open('Failed to update role: ' + err.message, 'Close', { duration: 3000 });
       }
     });
   }
